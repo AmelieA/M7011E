@@ -10,4 +10,5 @@ exports.index = function(req, res){
 
 exports.mapbox = function(req, res){
   res.sendfile('views/mapbox.html');
+  res.end();
 };

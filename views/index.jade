@@ -2,10 +2,15 @@ doctype 5
 html(lang="en")
   head
     title= title
-    script{ type: 'text/javascript', src: '//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js' }
-    link{ rel: 'stylesheet', href: '//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.css' }
-    link{ rel: 'stylesheet', href: 'stylesheets/style.less' }
+    script.{ type: 'text/javascript', src: '//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js' }
+    link(rel='stylesheet', href='/stylesheets/style.css')
   body
     #mapContainer
-      script.
-        var map = L.mapbox.map('map').setView([40, -74.50], 9);
+      script.{
+        var map = L.map('map').setView([65, 22], 3);
+        L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+          maxZoom: 18
+        }).addTo(map);
+        }
+    p Hellow

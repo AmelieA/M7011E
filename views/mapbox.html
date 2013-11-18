@@ -16,8 +16,13 @@
 <body>
 <div id='map'></div>
 <script>
-var map = L.mapbox.map('map', 'examples.map-9ijuk24y')
-    .setView([40, -74.50], 9);
+var map = L.map('map').setView([65, 22], 3);
+L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+    maxZoom: 18
+}).addTo(map);
+L.control.addTo(map);
+map.getPosition();
 </script>
 </body>
 </html>
