@@ -1,0 +1,11 @@
+doctype 5
+html(lang="en")
+  head
+    title= title
+    script{ type: 'text/javascript', src: '//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js' }
+    link{ rel: 'stylesheet', href: '//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.css' }
+    link{ rel: 'stylesheet', href: 'stylesheets/style.less' }
+  body
+    #mapContainer
+      script.
+        var map = L.mapbox.map('map').setView([40, -74.50], 9);
