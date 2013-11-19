@@ -10,10 +10,18 @@
   
   <style>
     body { margin:0; padding:0; }
-    #map { position:absolute; top:0; bottom:0; width:100%; }
+    #map { position:absolute; top:0; bottom:0; width:100%;z-index:-1; }
+    ul{list-style-type:none;margin:0;padding:40;overflow:hidden;}
+	li{float:left;}
   </style>
 </head>
 <body>
+<form name="input" action="SearchCity" method="get">
+	<ul>
+		<li><input type="text" name="city" value="City"><br></li>
+		<li><input type="submit" value="Search"></li>
+		</ul>
+</form> 
 <div id='map'></div>
 <script>
 var map = L.map('map').setView([65, 22], 3);
@@ -21,8 +29,7 @@ L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/
     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
     maxZoom: 18
 }).addTo(map);
-L.control.addTo(map);
-map.getPosition();
+map.panTo(new L.LatLng(40.737, -73.923));
 </script>
 </body>
 </html>

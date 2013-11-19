@@ -35,6 +35,12 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/mapbox', routes.mapbox);
 app.get('/users', user.list);
+app.get('/login', user.login);
+app.get('/SearchCity',routes.SearchCity);
+
+app.use(function(req, res, next){
+  res.send(404, 'Sorry cant find that!');
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
