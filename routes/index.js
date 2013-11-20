@@ -11,8 +11,3 @@ exports.index = function(req, res){
 exports.mapbox = function(req, res){
   res.sendfile('views/mapbox.html');
 };
-
-
-exports.SearchCity = function(req, res){
-	res.sendfile('views/mapbox.html');
-};
