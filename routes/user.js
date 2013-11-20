@@ -8,9 +8,5 @@ exports.list = function(req, res){
 };
 
 exports.login = function(req, res){
-	res.render('login', {
-	title: "Authentication Example",
-	user: req.session.user ? req.session.user.name : undefined
-	});
-	res.render('login');
+	res.sendfile('views/mapbox.html');
 };
