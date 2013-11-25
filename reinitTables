@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo -u postgres dropdb dbtest
+sudo -u postgres createdb -O nodetest dbtest
