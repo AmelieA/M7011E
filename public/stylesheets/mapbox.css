@@ -1,10 +1,11 @@
-/* General */
+ General 
 body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%;z-index:-10; }
 
 ul{list-style-type:none;margin:0;padding:40;overflow:hidden;}
-li{float:right;}
+li{position:absolute;width:30px;background-color:#b0e0e6;}
 
+/*
 .login {
 	z-index:-9;
 	position: relative;
@@ -53,6 +54,7 @@ li{float:right;}
 	position:relative;
 	top:1px;
 }
+*/
 
 /* geocoding */
 .leaflet-center {
@@ -60,7 +62,6 @@ li{float:right;}
 	margin-left: auto;
 	margin-right: auto;
 	position: relative;
-	z-index:-1;
 }
 .leaflet-control-geosearch, .leaflet-control-geosearch ul {
 	border-radius: 7px;
@@ -69,7 +70,6 @@ li{float:right;}
 	padding: 5px;
 	width: 100%;
 	height: auto;
-	z-index:-1;
 	position: relative;
 }
 .leaflet-control-geosearch-msg ul {
@@ -78,7 +78,6 @@ li{float:right;}
 	height: auto;
 	background: none;
 	padding: 0;
-	z-index:-1;
 	position: relative;
 }
 .leaflet-control-geosearch ul li {
@@ -88,7 +87,6 @@ li{float:right;}
 	padding: 4px;
 	font: 12px arial;
 	text-indent: 4px;
-	z-index:-1;
 	position: relative;
 }
 .leaflet-container .leaflet-control-geosearch input {
@@ -99,7 +97,6 @@ li{float:right;}
 	background: rgba(255, 255, 255, 0.75);                        
 	border-radius: 4px;
 	border: none;
-	z-index:-1;
 	position: relative;
 }
 

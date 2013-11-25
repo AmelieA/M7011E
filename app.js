@@ -9,8 +9,16 @@ var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 var html=require('html');
+var net = require('net');
 
 var app = express();
+var server = http.createServer(app);
+
+var url = require('url');
+var querystring = require('querystring');
+
+var pg = require('pg').native;
+var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
 // all environments
 app.set('port', process.env.PORT || 8080);
@@ -34,6 +42,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/mapbox', routes.mapbox);
+app.get('/addpin', routes.addpin);
 app.get('/users', user.list);
 app.get('/login', user.login);
 
@@ -41,6 +50,14 @@ app.use(function(req, res, next){
   res.send(404, 'Sorry cant find that!');
 });
 
-http.createServer(app).listen(app.get('port'), function(){
+server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+  address = server.address();
+  console.log("Express server listening on %j", address);
+});
+
+var client = net.connect({port: app.get('port')},function() { //'connect' listener
+  server.getConnections(function(err, count){
+	console.log('There is '+count+' user connection');
+	});
 });
