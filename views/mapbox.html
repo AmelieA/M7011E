@@ -5,7 +5,7 @@
 <title>VISA</title>
   
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <script src='//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js'></script>
+  <script src='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
   <script src="javascripts/l.control.geosearch.js"></script>
   <script src="javascripts/l.geosearch.provider.openstreetmap.js"></script>
   <link href='/stylesheets/mapbox.css' rel='stylesheet' />
@@ -13,30 +13,39 @@
   
 </head>
 <body>
-<!--
-	<a href="/add" class="leaflet-center">+</a>
--->
-<!--
-	<a href="/login" class="login">login</a>
--->
-<!--
-<form name="input" action="name" method="get">
-	<ul>
-		<li><input type="text" name="name" value="name of the place"><br></li>
-		<li><input type="submit" value="add"></li>
-	</ul>
-</form> 
--->
+	<form id="menu" class="panel" role="navigation">
+        <ul>
+			<li><input type="text" name="name" value="name of the place"><br></li>
+			<li><textarea id=comment name="comment" cols="19" rows="5">comments</textarea></li>
+			<li><font size="1"><font color="white">select the location by clicking on the map</font></font></li>
+			<li id="location" ><input type="text" name="location" value=""><br></li>
+			<li><input type="submit" value="add"></li>
+        </ul>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="javascripts/bigSlide.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.menu-link').bigSlide();
+        });
+    </script>
+<a href="menu" class="menu-link">&#9776;</a>
 <div id='map'></div>
-<script>
-var map = L.map('map').setView([65, 22], 3);
-L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-    maxZoom: 18
-}).addTo(map);
-new L.Control.GeoSearch({
-    provider: new L.GeoSearch.Provider.OpenStreetMap(),
-}).addTo(map)
-</script>
+	<script>
+	var map = L.map('map', {zoomControl: false}).setView([65, 22], 3);
+	map.addControl( L.control.zoom({position: 'topright'}) )
+	L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+		maxZoom: 18
+	}).addTo(map);
+	new L.Control.GeoSearch({
+		provider: new L.GeoSearch.Provider.OpenStreetMap(),
+	}).addTo(map)
+	function onMapClick(e) {
+		document.getElementById("location").value='e.latlng';
+		alert("You clicked the map at " + e.latlng);
+	}
+	map.on('click', onMapClick);
+	</script>
 </body>
 </html>
