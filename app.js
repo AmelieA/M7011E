@@ -14,6 +14,12 @@ var net = require('net');
 var app = express();
 var server = http.createServer(app);
 
+var url = require('url');
+var querystring = require('querystring');
+
+var pg = require('pg').native;
+var dbURL = "tcp://nodetest:pika@localhost/dbtest";
+
 // all environments
 app.set('port', process.env.PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
