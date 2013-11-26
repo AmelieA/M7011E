@@ -8,5 +8,5 @@ exports.list = function(req, res){
 };
 
 exports.login = function(req, res){
-	res.sendfile('views/mapbox.html');
+	
 };

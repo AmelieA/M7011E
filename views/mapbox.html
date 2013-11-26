@@ -15,21 +15,28 @@
 <body>
 	<form id="menu" class="panel" role="navigation">
         <ul>
-			<li><input type="text" name="name" value="name of the place"><br></li>
-			<li><textarea id=comment name="comment" cols="19" rows="5">comments</textarea></li>
-			<li><font size="1"><font color="white">select the location by clicking on the map</font></font></li>
-			<li id="location" ><input type="text" name="location" value=""><br></li>
-			<li><input type="submit" value="add"></li>
+			<li><input type="text" name="name" value="name of the place" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
+			<li><textarea id=comment name="comment" cols="19" rows="7" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><font size="2"><font color="white">location :</font></font></li>
+			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
+			<li><input type="submit" value="add" style="width: 176px;"></li>
+			<li><a href="/auth/google">Sign In with Google</a></li>
         </ul>
     </form>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="javascripts/bigSlide.js"></script>
     <script>
+		function inputFocus(i){
+			if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
+		}
+		function inputBlur(i){
+			if(i.value==""){ i.value=i.defaultValue; i.style.color="#888"; }
+		}
         $(document).ready(function() {
             $('.menu-link').bigSlide();
         });
     </script>
-<a href="menu" class="menu-link"><img src="/images/tab-nav.gif" alt="some_text"></a>
+<a href="menu" class="menu-link"><img src="/images/tab-nav.png" alt="some_text"></a>
 <div id='map'></div>
 	<script>
 	var map = L.map('map', {zoomControl: false}).setView([65, 22], 3);
@@ -42,8 +49,9 @@
 		provider: new L.GeoSearch.Provider.OpenStreetMap(),
 	}).addTo(map)
 	function onMapClick(e) {
-		document.getElementById("location").value='e.latlng';
-		alert("You clicked the map at " + e.latlng);
+		document.getElementById("location").innerHTML=e.latlng.lat+","+e.latlng.lng;
+		document.getElementById("location").setAttribute("style", "font-size: 12px;");
+		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
 	}
 	map.on('click', onMapClick);
 	</script>
