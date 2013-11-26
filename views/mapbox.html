@@ -20,8 +20,8 @@
 			<li><font size="2"><font color="white">location :</font></font></li>
 			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
 			<li><input type="submit" value="add" style="width: 176px;"></li>
-			<input id="locationHidden" type="hidden" name="locationHidden" value="" />
-			
+			<input id="locationHiddenX" type="hidden" name="x" value="" />
+			<input id="locationHiddenY" type="hidden" name="y" value="" />
 			<li><a href="/auth/google">Sign In with Google</a></li>
         </ul>
     </form>
@@ -53,7 +53,8 @@
 	function onMapClick(e) {
 		document.getElementById("location").innerHTML=e.latlng.lat+","+e.latlng.lng;
 		document.getElementById("location").setAttribute("style", "font-size: 12px;");
-		document.getElementById("locationHidden").value=e.latlng.lat+","+e.latlng.lng;
+		document.getElementById("locationHiddenX").value=e.latlng.lat;
+		document.getElementById("locationHiddenY").value=e.latlng.lat;
 		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
 	}
 	map.on('click', onMapClick);
