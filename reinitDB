@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo -u postgres dropdb dbtest
+sudo -u postgres createdb -O nodetest dbtest
+echo "The DB have been reinitialized. Now you have to create the tables."
