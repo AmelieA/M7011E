@@ -32,4 +32,5 @@ exports.mapbox = function(req, res)
         console.log('Error : invalid request');
     }
 	res.sendfile('views/mapbox.html'); //{user: 'user'}
+
 };
