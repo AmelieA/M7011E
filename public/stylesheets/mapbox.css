@@ -1,9 +1,37 @@
- General 
+/* General */
 body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%;z-index:-10; }
 
-ul{list-style-type:none;margin:0;padding:40;overflow:hidden;}
-li{position:absolute;width:30px;background-color:#b0e0e6;}
+/*
+ul{list-style-type:none;padding-left:80%;overflow:hidden;position:absolute; top:0; bottom:0; width:30%;z-index:-5;}
+li{width:300px;background-color:white; z-index:-5;padding-left:5px;padding-top:5px;}
+*/
+.panel {
+    position: fixed;
+    left: -15.625em; /*or width of your navigation panel*/
+    width: 15.625em; /*should match the above value*/
+    background: rgba(0,0,0,.5);
+}
+.panel ul{
+	list-style-type: none;
+}
+.panel a {
+    color: #fff;
+}
+.wrap {
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+a{
+	position: relative;
+	height: 28px;
+}
+#comment{
+    resize: none;
+}
+
 
 /*
 .login {

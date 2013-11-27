@@ -5,7 +5,7 @@
 <title>VISA</title>
   
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <script src='//api.tiles.mapbox.com/mapbox.js/v1.4.2/mapbox.js'></script>
+  <script src='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
   <script src="javascripts/l.control.geosearch.js"></script>
   <script src="javascripts/l.geosearch.provider.openstreetmap.js"></script>
   <link href='/stylesheets/mapbox.css' rel='stylesheet' />
@@ -13,30 +13,53 @@
   
 </head>
 <body>
-<!--
-	<a href="/add" class="leaflet-center">+</a>
--->
-<!--
-	<a href="/login" class="login">login</a>
--->
-<!--
-<form name="input" action="name" method="get">
-	<ul>
-		<li><input type="text" name="name" value="name of the place"><br></li>
-		<li><input type="submit" value="add"></li>
-	</ul>
-</form> 
--->
+	<form id="menu" class="panel" role="navigation">
+        <ul>
+			<li><input type="text" name="name" value="name of the place" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
+			<li><textarea id=comment name="comment" cols="19" rows="7" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><font size="2"><font color="white">location :</font></font></li>
+			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
+			<li><input type="submit" value="add" style="width: 176px;"></li>
+			<input id="locationHiddenX" type="hidden" name="x" value="" />
+			<input id="locationHiddenY" type="hidden" name="y" value="" />
+			<input id="loginHidden" type="hidden" name="login" value="default_user" />
+			
+			<li><a style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
+        </ul>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="javascripts/bigSlide.js"></script>
+    <script>
+		function inputFocus(i){
+			if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
+		}
+		function inputBlur(i){
+			if(i.value==""){ i.value=i.defaultValue; i.style.color="#888"; }
+		}
+        $(document).ready(function() {
+            $('.menu-link').bigSlide();
+        });
+    </script>
+<a href="menu" class="menu-link"><img src="/images/tab-nav.png" alt="some_text"></a>
 <div id='map'></div>
-<script>
-var map = L.map('map').setView([65, 22], 3);
-L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-    maxZoom: 18
-}).addTo(map);
-new L.Control.GeoSearch({
-    provider: new L.GeoSearch.Provider.OpenStreetMap(),
-}).addTo(map)
-</script>
+	<script>
+	var map = L.map('map', {zoomControl: false}).setView([65, 22], 3);
+	map.addControl( L.control.zoom({position: 'topright'}) )
+	L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+		maxZoom: 18
+	}).addTo(map);
+	new L.Control.GeoSearch({
+		provider: new L.GeoSearch.Provider.OpenStreetMap(),
+	}).addTo(map)
+	function onMapClick(e) {
+		document.getElementById("location").innerHTML=e.latlng.lat+","+e.latlng.lng;
+		document.getElementById("location").setAttribute("style", "font-size: 12px;");
+		document.getElementById("locationHiddenX").value=e.latlng.lat;
+		document.getElementById("locationHiddenY").value=e.latlng.lat;
+		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
+	}
+	map.on('click', onMapClick);
+	</script>
 </body>
 </html>

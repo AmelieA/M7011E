@@ -1,6 +1,6 @@
 {
   "name": "VISA",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "node app.js"
@@ -9,6 +9,8 @@
     "express": "3.4.4",
     "jade": "*",
     "html": "*",
-    "pg":"*"
+    "pg":"*",
+    "passport": "*",
+    "passport-google-oauth": "*"
   }
 }

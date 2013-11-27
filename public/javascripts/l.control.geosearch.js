@@ -58,7 +58,7 @@ L.Control.GeoSearch = L.Control.extend({
         searchbox.id = 'leaflet-control-geosearch-qry';
         searchbox.type = 'text';
         searchbox.position = "relative"; 
-        searchbox.zIndex = "-1";
+        searchbox.zIndex = "99";
         searchbox.placeholder = this._config.searchLabel;
         this._searchbox = searchbox;
 
@@ -66,13 +66,13 @@ L.Control.GeoSearch = L.Control.extend({
         msgbox.id = 'leaflet-control-geosearch-msg';
         msgbox.className = 'leaflet-control-geosearch-msg';
         msgbox.position = "relative"; 
-        msgbox.zIndex = "-1";
+        msgbox.zIndex = "99";
         this._msgbox = msgbox;
 
         var resultslist = document.createElement('ul');
         resultslist.id = 'leaflet-control-geosearch-results';
         resultslist.position = "relative"; 
-        resultslist.zIndex = "-1";
+        resultslist.zIndex = "99";
         this._resultslist = resultslist;
 
         this._msgbox.appendChild(this._resultslist);

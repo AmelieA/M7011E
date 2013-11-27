@@ -35,9 +35,9 @@ function checkTables()
 																		})
 						});
 						
-	pg.connect(dbURL, 	function(err, client) 
+		pg.connect(dbURL, 	function(err, client) 
 						{      
-							client.query("SELECT * FROM Comments", 	function(err, result) 
+							client.query("SELECT * FROM Comments", 		function(err, result) 
 																		{
 																			console.log("\n ----- \n Comments \n ----- \n Row count: %d \n",result.rows.length);
 																			for (var i = 0; i < result.rows.length; i++) 
