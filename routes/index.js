@@ -16,7 +16,7 @@ exports.index = function(req, res){
 
 exports.connected = function(req, res)
 {	
-	if (req.user != undefined){
+	//~ if (req.user != undefined){
 		//~ console.log(req.user);
 		//~ console.log(url.parse(req.url).pathname);
 		//~ if (('/mapbox/'+req.user.displayName) == url.parse(req.url).pathname){
@@ -56,7 +56,8 @@ exports.connected = function(req, res)
 			}
 			res.sendfile('views/mapbox.html');
 		//~ }
-	}else{
+	//~ }
+	else{
 		res.redirect("/mapbox");
 	}
 };
