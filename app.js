@@ -48,8 +48,9 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
-app.get('/mapbox', routes.mapbox);
+app.get('/', routes.mapbox);
+app.get('/mapbox/*', routes.connected);
+app.get('/mapbox*', routes.mapbox);
 app.get('/users', user.list);
 
 app.use(function(req, res, next){
@@ -88,7 +89,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/google' }),
   function(req, res) {
-    res.redirect('/mapbox: user/req.user');
+    res.redirect('/mapbox/'+req.user.displayName);
   });
 
 app.get('/logout', function(req, res){
