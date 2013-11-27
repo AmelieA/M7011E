@@ -56,10 +56,9 @@ exports.connected = function(req, res)
 			}
 			res.sendfile('views/mapbox.html');
 		//~ }
-	//~ }
-	else{
+	//~ }else{
 		res.redirect("/mapbox");
-	}
+	//~ }
 };
 
 exports.mapbox = function(req, res){
