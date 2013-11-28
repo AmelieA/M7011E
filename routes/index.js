@@ -4,6 +4,9 @@ var querystring = require('querystring');
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
+//~ var path = require('path');
+//~ var mime = require('mime');
+//~ var type = mime.lookup(path);
 
 /*
  * GET home page.
@@ -52,8 +55,13 @@ exports.connected = function(req, res)
     }
 			else 
 			{
-				console.log('Not a add request');
+				console.log('Not an add request');
 			}
+			//~ if (!res.getHeader('content-type')) {
+			  //~ var charset = mime.charsets.lookup(type);
+			  //~ res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
+			//~ }
+			res.setHeader("Content-Type", "text/html");
 			res.sendfile('views/mapbox.html');
 	}else{
 		res.redirect("/mapbox");
