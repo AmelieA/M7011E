@@ -2,10 +2,33 @@
 body { margin:0; padding:0; }
 #map { position:absolute; top:0; bottom:0; width:100%;z-index:-10; }
 
-/*
-ul{list-style-type:none;padding-left:80%;overflow:hidden;position:absolute; top:0; bottom:0; width:30%;z-index:-5;}
-li{width:300px;background-color:white; z-index:-5;padding-left:5px;padding-top:5px;}
-*/
+div.comments{
+	position:absolute;
+	width:200px;
+	background: rgba(0,0,0,.5);
+	top:7%;
+	bottom: 7%;
+	color: white;
+	overflow:auto;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+p.user{
+	color: grey;
+	font: 12px arial;
+}
+
+p.comment{
+	width:180px;
+	padding:5px;
+	margin:5px;
+	font: 14px arial;
+	word-wrap: break-word;
+}
+
 .panel {
     position: fixed;
     left: -15.625em; /*or width of your navigation panel*/
