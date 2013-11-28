@@ -119,5 +119,21 @@
 	});
 	
 	</script>
+	
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+    /*---PIN display---*/
+    var socket = io.connect();
+    var marker;
+    socket.on('display', function (result) {
+	
+	for (var i = 0; i < result.rows.length; i++) {
+		marker = L.marker([result.rows[i].x, result.rows[i].y]).addTo(map);
+		}
+
+    });
+    </script>
+	
+	
 </body>
 </html>
