@@ -24,6 +24,12 @@ var server = http.createServer(app);
 var url = require('url');
 var querystring = require('querystring');
 
+var pg = require('pg').native;
+var dbURL = "tcp://nodetest:pika@localhost/dbtest";
+
+var io = require('socket.io').listen(server);
+
+exports.io=io;
 
 // all environments
 app.set('port', process.env.PORT || 8080);
@@ -54,7 +60,6 @@ app.get('/users', user.list);
 app.use(function(req, res, next){
   res.send(404, 'Sorry cant find that!');
 });
-
 
 /* -------------------Google Authentication ------------------------*/
 passport.serializeUser(function(user, done) {
@@ -88,11 +93,14 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/google' }),
   function(req, res) {
-    res.redirect('/mapbox/'+req.user.displayName);
+	var user = decodeURI(req.user.displayName);
+	console.log(user);
+    res.redirect('/mapbox/'+user);
   });
 
 app.get('/logout', function(req, res){
   req.logout();
+  req.user = undefined;  
   res.redirect('/mapbox');
 });
 

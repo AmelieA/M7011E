@@ -25,7 +25,8 @@
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
 			<input id="loginHidden" type="hidden" name="login" value="default_user" />
 			
-			<li><a style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
+			<li><p id="userName" style="position:absolute; bottom:3%;" ><font size="1"><font color="white"></p></font></font></li>
+			<li><a id="google" style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
         </ul>
     </form>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -37,13 +38,16 @@
 		function inputBlur(i){
 			if(i.value==""){ i.value=i.defaultValue; i.style.color="#888"; }
 		}
-        $(document).ready(function() {
-            $('.menu-link').bigSlide();
-        });
     </script>
 <a href="menu" class="menu-link"><img src="/images/tab-nav.png" alt="some_text"></a>
 <div id='map'></div>
 	<script>
+	/*    BigSlide   */
+	$(document).ready(function() {
+		var menu = $('.menu-link').bigSlide();
+	});
+	
+	/*   leaflet   */
 	var map = L.map('map', {zoomControl: false}).setView([65, 22], 3);
 	map.addControl( L.control.zoom({position: 'topright'}) )
 	L.tileLayer('http://{s}.tile.cloudmade.com/9d9033e8b1eb4c99a678bca933620e84/997/256/{z}/{x}/{y}.png', {
@@ -62,12 +66,43 @@
 	}
 	map.on('click', onMapClick);
 	
-	/*Affichage des pins*/
 	
-	var marker = L.marker([51.5, -0.09]).addTo(map);
-	//alert("Pikaaaaachuuuuuuuuu !");
+	/*   login part   */
+	var pathArray = window.location.pathname.split( '/' );
+	var UserName = decodeURI(pathArray[2]);
+	//~ alert(UserName);
+	if ((UserName != undefined) && (!UserName) && (UserName != "")){
+		//~ alert("if");
+		document.getElementById("userName").innerHTML= "wellcome "+UserName;
+		document.getElementById("google").innerHTML = "log out";
+		document.getElementById("google").href = '/logout';
+	}
+	else{
+		//~ alert("else");
+		document.getElementById("userName").innerHTML= "";
+		document.getElementById("google").innerHTML = "Sign In with Google";
+		document.getElementById("google").href = "/auth/google";
+	}
 	
+	/*   pin display   */
+	
+	marker = L.marker([65, 22],{clickable:true}).addTo(map);
+	marker.on('click', function () {
+		$('.menu-link').click();
+	});
 	
 	</script>
+	
+	
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+    /*---PIN---*/
+    var socket = io.connect();
+    socket.on('faitUneAlerte', function () {
+        alert('Je fais une alerte car on m\'a appelé !');
+    });
+    
+    
+</script>
 </body>
 </html>

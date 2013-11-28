@@ -4,6 +4,8 @@ var querystring = require('querystring');
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
+var app = require('../app');
+
 //~ var path = require('path');
 //~ var mime = require('mime');
 //~ var type = mime.lookup(path);
@@ -29,32 +31,10 @@ exports.connected = function(req, res)
 			var params = querystring.parse(url.parse(req.url).query)
 			var already_exists = 0;
 			
+			app.io.sockets.on('connection', function (socket) {
+				socket.emit('faitUneAlerte');
+				});
 			
-			//Display pins
-			
-				pg.connect(dbURL, 	function(err, client) 
-					{      
-						client.query("SELECT * FROM Locations", 	function(err, result) 
-																	{
-																		console.log("\n ----- \n Locations \n ----- \n Row count: %d \n",result.rows.length);
-																		for (var i = 0; i < result.rows.length; i++) 
-																		{
-																			var row = result.rows[i];
-																			console.log("location: " + row.location);
-																			console.log("x: " + row.x);
-																			console.log("y: " + row.y);
-																			console.log("img_name: " + row.img_name + "\n");
-																		}
-																	})
-					});
-
-			
-			
-			
-			
-			
-			
-			//Adding a location
 			if ('name' in params && 'x' in params && 'y' in params && 'comment' in params && 'login' in params) {        
 				pg.connect(dbURL,         function(err, client){      
 					client.query("SELECT * FROM Locations", function(err, result) {
