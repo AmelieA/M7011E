@@ -31,10 +31,16 @@ exports.connected = function(req, res)
 			var params = querystring.parse(url.parse(req.url).query)
 			var already_exists = 0;
 			
+			//Sending information about pins to display
 			app.io.sockets.on('connection', function (socket) {
-				socket.emit('faitUneAlerte');
-				});
+				pg.connect(dbURL, 	function(err, client) {      
+					client.query("SELECT * FROM Locations", function(err, result) {
+						socket.emit('display', result);
+						});
+					});
+			});	
 			
+			//Adding a new location
 			if ('name' in params && 'x' in params && 'y' in params && 'comment' in params && 'login' in params) {        
 				pg.connect(dbURL,         function(err, client){      
 					client.query("SELECT * FROM Locations", function(err, result) {
