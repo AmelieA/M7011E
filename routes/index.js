@@ -4,10 +4,6 @@ var querystring = require('querystring');
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
-//~ var path = require('path');
-//~ var mime = require('mime');
-//~ var type = mime.lookup(path);
-
 /*
  * GET home page.
  */
@@ -19,7 +15,7 @@ exports.index = function(req, res){
 
 exports.connected = function(req, res)
 {	
-	if (true){//(req.user != undefined){
+	if (req.user != undefined){
 		//~ console.log(req.user);
 		//~ console.log(url.parse(req.url).pathname);
 		//~ if (('/mapbox/'+req.user.displayName) == url.parse(req.url).pathname){

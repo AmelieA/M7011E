@@ -15,7 +15,7 @@
 </head>
 <body>
 	<form id="menu" class="panel" role="navigation">
-        <ul>
+        <ul id="ulAd" style="">
 			<li><input type="text" name="name" value="name of the place" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
 			<li><textarea id=comment name="comment" cols="19" rows="7" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><font size="2"><font color="white">location :</font></font></li>
@@ -24,7 +24,11 @@
 			<input id="locationHiddenX" type="hidden" name="x" value="null" />
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
 			<input id="loginHidden" type="hidden" name="login" value="default_user" />
-			
+		</ul>
+		<ul id="ul" style="display:none">
+			<li><p id="name"><font color="white">Name</p></font></li>
+		</ul>
+		<ul>
 			<li><p id="userName" style="position:absolute; bottom:3%;" ><font size="1"><font color="white"></p></font></font></li>
 			<li><a id="google" style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
         </ul>
@@ -44,7 +48,7 @@
 	<script>
 	/*    BigSlide   */
 	$(document).ready(function() {
-		var menu = $('.menu-link').bigSlide();
+		menu = $('.menu-link').bigSlide();
 	});
 	
 	/*   leaflet   */
@@ -62,6 +66,9 @@
 		document.getElementById("location").setAttribute("style", "font-size: 12px;");
 		document.getElementById("locationHiddenX").value=e.latlng.lat;
 		document.getElementById("locationHiddenY").value=e.latlng.lat;
+		document.getElementById("ulAd").style.display = "";
+		document.getElementById("ul").style.display = "none";
+		menu.open();
 		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
 	}
 	map.on('click', onMapClick);
@@ -88,7 +95,18 @@
 	
 	marker = L.marker([65, 22],{clickable:true}).addTo(map);
 	marker.on('click', function () {
-		$('.menu-link').click();
+		if (document.getElementById("ulAd").style.display == ""){
+			menu.close();
+			setTimeout('', 300000);
+			document.getElementById("ul").style.display = "";
+			document.getElementById("ulAd").style.display = "none";
+			menu.open();
+		}
+		else if(menu.state == "open"){
+			menu.close();
+		}else{
+			menu.open();
+		}
 	});
 	
 	</script>
