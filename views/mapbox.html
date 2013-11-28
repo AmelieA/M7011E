@@ -25,8 +25,17 @@
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
 			<input id="loginHidden" type="hidden" name="login" value="default_user" />
 		</ul>
-		<ul id="ul" style="display:none">
-			<li><p id="name"><font color="white">Name</p></font></li>
+		<ul id="ul" style="display:none" scrolling="yes">
+			<li><p><font color="white">Name</p></font></li>
+			<div class="comments">
+				<p class="user">from Amélie on the 28/11/13</p>
+				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+				<p class="user">from Amélie on the 27/11/13</p>
+				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+				<p class="user">from Amélie on the 28/11/13</p>
+				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+
+			</div>
 		</ul>
 		<ul>
 			<li><p id="userName" style="position:absolute; bottom:3%;" ><font size="1"><font color="white"></p></font></font></li>
@@ -65,7 +74,7 @@
 		document.getElementById("location").innerHTML=e.latlng.lat+","+e.latlng.lng;
 		document.getElementById("location").setAttribute("style", "font-size: 12px;");
 		document.getElementById("locationHiddenX").value=e.latlng.lat;
-		document.getElementById("locationHiddenY").value=e.latlng.lat;
+		document.getElementById("locationHiddenY").value=e.latlng.lng;
 		document.getElementById("ulAd").style.display = "";
 		document.getElementById("ul").style.display = "none";
 		menu.open();
