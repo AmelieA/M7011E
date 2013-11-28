@@ -27,6 +27,10 @@ var querystring = require('querystring');
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
+var io = require('socket.io').listen(server);
+
+exports.io=io;
+
 // all environments
 app.set('port', process.env.PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));

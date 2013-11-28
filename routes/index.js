@@ -4,6 +4,8 @@ var querystring = require('querystring');
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
+var app = require('../app');
+
 //~ var path = require('path');
 //~ var mime = require('mime');
 //~ var type = mime.lookup(path);
@@ -28,6 +30,10 @@ exports.connected = function(req, res)
 			var user = req.params.user;
 			var params = querystring.parse(url.parse(req.url).query)
 			var already_exists = 0;
+			
+			app.io.sockets.on('connection', function (socket) {
+				socket.emit('faitUneAlerte');
+				});
 			
 			if ('name' in params && 'x' in params && 'y' in params && 'comment' in params && 'login' in params) {        
 				pg.connect(dbURL,         function(err, client){      
