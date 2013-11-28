@@ -89,11 +89,14 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/google' }),
   function(req, res) {
-    res.redirect('/mapbox/'+req.user.displayName);
+	var user = decodeURI(req.user.displayName);
+	console.log(user);
+    res.redirect('/mapbox/'+user);
   });
 
 app.get('/logout', function(req, res){
   req.logout();
+  req.user = undefined;  
   res.redirect('/mapbox');
 });
 
