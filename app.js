@@ -24,8 +24,6 @@ var server = http.createServer(app);
 var url = require('url');
 var querystring = require('querystring');
 
-var pg = require('pg').native;
-var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 
 // all environments
 app.set('port', process.env.PORT || 8080);
@@ -56,6 +54,7 @@ app.get('/users', user.list);
 app.use(function(req, res, next){
   res.send(404, 'Sorry cant find that!');
 });
+
 
 /* -------------------Google Authentication ------------------------*/
 passport.serializeUser(function(user, done) {
