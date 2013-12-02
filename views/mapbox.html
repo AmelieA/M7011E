@@ -23,11 +23,11 @@
 			<li><input type="submit" value="add" style="width: 176px;"></li>
 			<input id="locationHiddenX" type="hidden" name="x" value="null" />
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
-			<input id="loginHidden" type="hidden" name="login" value="default_user" />
+			<input id="loginHidden" type="hidden" name="login" value="null" />
 		</ul>
 		<ul id="ul" style="display:none" scrolling="yes">
-			<li><p><font color="white">Name</p></font></li>
-			<div class="comments">
+			<li><p id="NamePlace"><font color="white">Name</p></font></li>
+			<div id="comments" class="comments">
 				<p class="user">from Amélie on the 28/11/13</p>
 				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
 				<p class="user">from Amélie on the 27/11/13</p>
@@ -38,7 +38,7 @@
 			</div>
 		</ul>
 		<ul>
-			<li><p id="userName" style="position:absolute; bottom:3%;" ><font size="1"><font color="white"></p></font></font></li>
+			<li><p id="userName" style="position:absolute; bottom:1%;" ><font size="1"><font color="white"></p></font></font></li>
 			<li><a id="google" style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
         </ul>
     </form>
@@ -87,9 +87,10 @@
 	var pathArray = window.location.pathname.split( '/' );
 	var UserName = decodeURI(pathArray[2]);
 	//~ alert(UserName);
-	if ((UserName != undefined) && (!UserName) && (UserName != "")){
+	if ((UserName != 'undefined') && (UserName != "")){
 		//~ alert("if");
 		document.getElementById("userName").innerHTML= "wellcome "+UserName;
+		document.getElementById("loginHidden").value=UserName;
 		document.getElementById("google").innerHTML = "log out";
 		document.getElementById("google").href = '/logout';
 	}
@@ -103,20 +104,48 @@
 	/*   pin display   */
 	
 	marker = L.marker([65, 22],{clickable:true}).addTo(map);
-	marker.on('click', function () {
-		if (document.getElementById("ulAd").style.display == ""){
+	marker2 = L.marker([54, 36],{clickable:true}).addTo(map);
+	marker.on('click', markerClick);
+	marker2.on('click', markerClick);
+	
+	var oldMarker;
+	function markerClick(e) {
+		if (document.getElementById("ulAd").style.display == ""){ //if you can "see" the ad menu
 			menu.close();
-			setTimeout('', 300000);
-			document.getElementById("ul").style.display = "";
-			document.getElementById("ulAd").style.display = "none";
-			menu.open();
+			showComment(e.latlng.lat,e.latlng.lng);
+			setTimeout(function(){
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				menu.open();
+			}, 300);
 		}
-		else if(menu.state == "open"){
+		else if((menu.state == "open") && (oldMarker == this.getLatLng())){
 			menu.close();
-		}else{
-			menu.open();
+		}else if ((menu.state == "open") && (oldMarker != this.getLatLng())){
+			menu.close();
+			showComment(e.latlng.lat,e.latlng.lng);
+			setTimeout(function(){
+				menu.open();
+			}, 300);
+		}else if ((menu.state == "closed")){
+			showComment(e.latlng.lat,e.latlng.lng);
+			setTimeout(function(){
+				menu.open();
+			}, 300);
 		}
-	});
+		oldMarker = this.getLatLng();
+	}
+	
+	function showComment(x,y){
+		document.getElementById("NamePlace").innerHTML = x+","+y ;
+		document.getElementById("NamePlace").setAttribute("style", "color:white;");
+		$('#comments').empty();
+		var node = document.getElementById("comments"); //insert strings of comments here :
+        node.innerHTML += "<p class=\"user\">" + "from Amélie on the 28\/11\/13" + "</p>";
+        node.innerHTML += "<p class=\"comment\">" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + "</p>";
+		node.innerHTML += "<p class=\"user\">" + "from Amélie on the 27\/11\/13" + "</p>";
+        node.innerHTML += "<p class=\"comment\">" + "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + "</p>";
+		}
 	
 	</script>
 	
