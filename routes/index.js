@@ -57,10 +57,7 @@ exports.connected = function(req, res)
 			{
 				console.log('Not an add request');
 			}
-			//~ if (!res.getHeader('content-type')) {
-			  //~ var charset = mime.charsets.lookup(type);
-			  //~ res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
-			//~ }
+
 			res.setHeader("Content-Type", "text/html");
 			res.sendfile('views/mapbox.html');
 	}else{
@@ -80,6 +77,9 @@ SendPin = function (){
 		pg.connect(dbURL, 	function(err, client) {      
 			client.query("SELECT * FROM Locations", function(err, result) {
 				socket.emit('display', result);
+				});
+			client.query("SELECT * FROM Comments", function(err, result) {
+				socket.emit('displayComment', result);
 				});
 			});
 	});	
