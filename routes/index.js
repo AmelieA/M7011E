@@ -25,16 +25,7 @@ exports.connected = function(req, res)
 			//~ console.log(req.params.user,' connected');
 			var user = req.params.user;
 			var params = querystring.parse(url.parse(req.url).query)
-			var already_exists = 0;
-			
-			//Sending information about pins to display
-			app.io.sockets.on('connection', function (socket) {
-				pg.connect(dbURL, 	function(err, client) {      
-					client.query("SELECT * FROM Locations", function(err, result) {
-						socket.emit('display', result);
-						});
-					});
-			});	
+			var already_exists = 0;	
 			
 			
 			//Adding a new location
@@ -75,8 +66,21 @@ exports.connected = function(req, res)
 	}else{
 		res.redirect("/mapbox");
 	}
+	SendPin();
 };
 
 exports.mapbox = function(req, res){
 	res.sendfile('views/mapbox.html');
+	SendPin();
 };
+
+SendPin = function (){
+	console.log("sending pins");
+	app.io.sockets.on('connection', function (socket) {
+		pg.connect(dbURL, 	function(err, client) {      
+			client.query("SELECT * FROM Locations", function(err, result) {
+				socket.emit('display', result);
+				});
+			});
+	});	
+}
