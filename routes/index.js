@@ -64,11 +64,13 @@ exports.connected = function(req, res)
 		res.redirect("/mapbox");
 	}
 	SendPin();
+	SendComment();
 };
 
 exports.mapbox = function(req, res){
 	res.sendfile('views/mapbox.html');
 	SendPin();
+	SendComment();
 };
 
 SendPin = function (){
@@ -78,9 +80,24 @@ SendPin = function (){
 			client.query("SELECT * FROM Locations", function(err, result) {
 				socket.emit('display', result);
 				});
-			client.query("SELECT * FROM Comments", function(err, result) {
-				socket.emit('displayComment', result);
-				});
 			});
+		socket.on('AskForComment',function (data) {
+			pg.connect(dbURL, 	function(err, client) {
+				client.query("SELECT * FROM Comments WHERE location='dvsvv'", function(err, result) {
+					console.log(result);
+					socket.emit('displayComments', result);
+					});
+				});
+				
+		console.log(data.location);
+		});
 	});	
+}
+
+
+SendComment = function (){
+	//~ app.io.sockets.on('AskForComment',function (data) {
+		//~ console.log("sending comments");
+		//~ console.log(data);
+	//~ });	
 }

@@ -107,7 +107,7 @@
 	}
 	
 	/*---PIN display---*/
-    var socket = io.connect();
+    window.socket = io.connect();
     markers = null;
     socket.on('display', function (result) {
 	
@@ -159,21 +159,17 @@
 		document.getElementById("NamePlace").setAttribute("style", "color:white;");
 		$('#comments').empty();
 		var node = document.getElementById("comments");
-		socket.on('displayComment', function (result) { //select and put the good comments
-			alert("in");
+		socket.emit('AskForComment', { location: LocationName });
+		socket.on('displayComments', function (result) { //select and put the good comments
 			for (var i = 0; i < result.rows.length; i++) {
-				alert(result.rows[i].location);
-				alert(LocationName);
-				if(result.rows[i].location==LocationName){
-					node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
-					node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
-				}
+				node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
+				node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
 			}
 		});
-        node.innerHTML += "<p class=\"user\">" + "from Amélie on the 28\/11\/13" + "</p>";
-        node.innerHTML += "<p class=\"comment\">" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + "</p>";
-		node.innerHTML += "<p class=\"user\">" + "from Amélie on the 27\/11\/13" + "</p>";
-        node.innerHTML += "<p class=\"comment\">" + "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + "</p>";
+        //~ node.innerHTML += "<p class=\"user\">" + "from Amélie on the 28\/11\/13" + "</p>";
+        //~ node.innerHTML += "<p class=\"comment\">" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + "</p>";
+		//~ node.innerHTML += "<p class=\"user\">" + "from Amélie on the 27\/11\/13" + "</p>";
+        //~ node.innerHTML += "<p class=\"comment\">" + "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + "</p>";
 		}
 	
 	</script>
