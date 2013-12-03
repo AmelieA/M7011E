@@ -26,18 +26,24 @@
 <body>
 	<form id="menu" class="panel" role="navigation">
         <ul id="ulAd" style="">
-			<li><input type="text" name="name" value="name of the place" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
-			<li><textarea id=comment name="comment" cols="19" rows="7" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><input id="locationName" type="text" name="name" value="name of the place" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
+			<li><textarea id="comment" name="comment" cols="19" rows="7" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><font size="2"><font color="white">location :</font></font></li>
 			<input id="locationHiddenX" type="hidden" name="x" value="null" />
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
 			<input id="loginHidden" type="hidden" name="login" value="null" />
 			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
-			<li><input type="submit" value="add" style="width: 176px;"></li>
+			<li><input id="adButton" type="submit" value="add" style="width: 176px;"></li>
 		</ul>
 		<ul id="ul" style="display:none" scrolling="yes">
 			<li><p id="NamePlace"><font color="white">Name</p></font></li>
+			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
 			<div id="comments" class="comments"></div>
+		</ul>
+		<ul id="ulAdComment" style="display:none">
+			<li><p id="NamePlaceAdComment"><font color="white">Name</p></font></li>
+			<li><textarea id="fakeCommentBox" cols="19" rows="7" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><button type="button" style="width: 176px;" onclick="SendComment();" >Send comment</button></li>
 		</ul>
 		<ul>
 			<li><p id="userName" style="position:absolute; bottom:1%;" ><font size="1"><font color="white"></p></font></font></li>
@@ -51,7 +57,7 @@
 			if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
 		}
 		function inputBlur(i){
-			if(i.value==""){ i.value=i.defaultValue; i.style.color="#888"; }
+			if(i.value==""){ i.value=i.defaultValue; i.style.color="#4C4C33"; }
 		}
     </script>
 <a href="menu" class="menu-link"><img src="/images/tab-nav.png" alt="some_text"></a>
@@ -80,10 +86,17 @@
 		document.getElementById("location").setAttribute("style", "font-size: 12px;");
 		document.getElementById("locationHiddenX").value=e.latlng.lat;
 		document.getElementById("locationHiddenY").value=e.latlng.lng;
-		document.getElementById("ulAd").style.display = "";
-		document.getElementById("ul").style.display = "none";
-		menu.open();
-		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
+		if (document.getElementById("ulAd").style.display != ""){
+			menu.close();
+			setTimeout(function(){
+				document.getElementById("ul").style.display = "none";
+				document.getElementById("ulAd").style.display = "";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			}, 300);
+		}else{
+			menu.open();
+		}
 	}
 	map.on('click', onMapClick);
 	
@@ -127,6 +140,7 @@
 			setTimeout(function(){
 				document.getElementById("ul").style.display = "";
 				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
 				menu.open();
 			}, 300);
 		}
@@ -136,6 +150,9 @@
 			menu.close();
 			showComment(e.latlng.lat,e.latlng.lng);
 			setTimeout(function(){
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
 				menu.open();
 			}, 300);
 		}else if ((menu.state == "closed")){
@@ -161,17 +178,39 @@
 		var node = document.getElementById("comments");
 		socket.emit('AskForComment', { location: LocationName });
 		socket.on('displayComments', function (result) { //select and put the good comments
+			node.innerHTML=" ";
 			for (var i = 0; i < result.rows.length; i++) {
 				node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
 				node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
 			}
 		});
-        //~ node.innerHTML += "<p class=\"user\">" + "from Amélie on the 28\/11\/13" + "</p>";
-        //~ node.innerHTML += "<p class=\"comment\">" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + "</p>";
-		//~ node.innerHTML += "<p class=\"user\">" + "from Amélie on the 27\/11\/13" + "</p>";
-        //~ node.innerHTML += "<p class=\"comment\">" + "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" + "</p>";
-		}
+	}
 	
+	function adComment(){
+		menu.close();
+		document.getElementById("NamePlaceAdComment").innerHTML = document.getElementById("NamePlace").innerHTML ;
+		document.getElementById("NamePlaceAdComment").setAttribute("style", "color:white;");
+		setTimeout(function(){
+			document.getElementById("ul").style.display = "none";
+			document.getElementById("ulAd").style.display = "none";
+			document.getElementById("ulAdComment").style.display = "";
+			menu.open();
+		}, 300);
+	}
+	
+	function SendComment(){
+		document.getElementById("loginHidden").value=UserName;
+		for (var i = 0; i < window.db.rows.length; i++) { //look for the gps coordonates
+			if(window.db.rows[i].location == document.getElementById("NamePlace").innerHTML){
+				LocationName = window.db.rows[i].location;
+				document.getElementById("locationHiddenX").value=window.db.rows[i].x;
+				document.getElementById("locationHiddenY").value=window.db.rows[i].y;
+			}
+		}
+		document.getElementById("comment").value = document.getElementById("fakeCommentBox").value;
+		document.getElementById("locationName").value = document.getElementById("NamePlace").innerHTML;
+		$("#adButton").click();
+	}
 	</script>
 	
 	<script type="text/javascript">
