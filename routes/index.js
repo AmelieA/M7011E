@@ -36,7 +36,13 @@ exports.connected = function(req, res)
 							var row = result.rows[i];
 							if (row.location==params['name']) 
 							{
-									already_exists=1;
+								client.query("SELECT * FROM Locations", function(err, result) {
+									for (var j = 0; j < result.rows.length; i++) {
+										if((result.rows[j].location==params['name'])&&(result.rows[j].text==params['comment'])){
+											already_exists=1;
+										}
+									}
+								});
 							}
 						}
 						
