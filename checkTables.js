@@ -5,7 +5,7 @@ var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 function checkTables() 
 {
 	
-		pg.connect(dbURL, 	function(err, client) 
+/*		pg.connect(dbURL, 	function(err, client) 
 						{      
 							client.query("SELECT * FROM Users",			function(err, result) 
 																		{
@@ -17,7 +17,7 @@ function checkTables()
 																				console.log("password: " + row.password);
 																			}
 																		})
-						});
+						});	*/
 						
 		pg.connect(dbURL, 	function(err, client) 
 						{      
@@ -29,8 +29,8 @@ function checkTables()
 																				var row = result.rows[i];
 																				console.log("location: " + row.location);
 																				console.log("x: " + row.x);
-																				console.log("y: " + row.y);
-																				console.log("img_name: " + row.img_name + "\n");
+																				console.log("y: " + row.y + "\n");
+																//				console.log("img_name: " + row.img_name + "\n");
 																			}
 																		})
 						});
@@ -49,6 +49,23 @@ function checkTables()
 																			}
 																		})
 						});
+		
+			pg.connect(dbURL, 	function(err, client) 
+						{      
+							client.query("SELECT * FROM Images", 		function(err, result) 
+																		{
+																			console.log("\n ----- \n Images \n ----- \n Row count: %d \n",result.rows.length);
+																			for (var i = 0; i < result.rows.length; i++) 
+																			{
+																				var row = result.rows[i];
+																				console.log("location: " + row.location);
+																				console.log("img_name: " + row.img_name);
+																				console.log("login: " + row.login + "\n");
+																			}
+																		})
+						});		
+		
+		
 }
 checkTables();
 pg.end();
