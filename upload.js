@@ -29,14 +29,14 @@ app.post('/', 	function(req, res){
 					//	console.log(__dirname + "/images/" + req.files.image.name);
 					//	console.log("Location = " + req.body.location);
 
-					var location_exists=0;
-					var imgname_taken=0;
-
 				pg.connect(dbURL,         function(err, client){      
-					client.query("SELECT * FROM Locations", function(err, result) {
+					client.query("SELECT Locations.location AS location, Images.img_name AS img_name FROM Locations LEFT JOIN Images ON Locations.location=Images.location", function(err, result) {
 						for (var i = 0; i < result.rows.length; i++) {
 							var row = result.rows[i];
-							console.log("row.img_name = " + row.img_ndswdsqsdame);
+							
+							var location_exists=0;
+							var imgname_taken=0;
+							
 							if (row.location==req.body.location) 
 							{
 								location_exists=1;
@@ -45,9 +45,9 @@ app.post('/', 	function(req, res){
 							{
 								imgname_taken=1;
 							}
-							console.log("row.location = " + row.location);
-							console.log("row.img_name = " + row.img_name);
-							console.log("req.files.image.name = " + req.files.image.name);
+				//			console.log("row.location = " + row.location);
+				//			console.log("row.img_name = " + row.img_name);
+				//			console.log("req.files.image.name = " + req.files.image.name);
 							
 						}
 						
