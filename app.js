@@ -91,9 +91,15 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/google' }),
   function(req, res) {
-	var user = decodeURI(req.user.displayName);
-	console.log(user);
-    res.redirect('/mapbox/'+user);
+	var userName = decodeURI(req.user.displayName);
+	//~ console.log("---------------------->",req.user);
+	var banned = user.checkUser(req.user.name.givenName,req.user.name.familyName,req.user.id);
+	//~ console.log("banned = ",banned);
+		if(!banned){
+			res.redirect('/mapbox/'+userName);
+		}else{
+			res.redirect('/logout/'+userName);
+		}
   });
 
 app.get('/logout', function(req, res){

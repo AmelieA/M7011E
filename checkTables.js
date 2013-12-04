@@ -5,19 +5,22 @@ var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 function checkTables() 
 {
 	
-/*		pg.connect(dbURL, 	function(err, client) 
+		pg.connect(dbURL, 	function(err, client) 
 						{      
 							client.query("SELECT * FROM Users",			function(err, result) 
 																		{
 																			console.log("\n ----- \n Users \n ----- \n Row count: %d \n",result.rows.length);
 																			for (var i = 0; i < result.rows.length; i++) 
 																			{
-																				var row = result.rows[i];
-																				console.log("login: " + row.login);
-																				console.log("password: " + row.password);
+																				console.log(result.rows[i]);
+																				//~ var row = result.rows[i];
+																				//~ console.log("fisrt name : " + row.firstName);
+																				//~ console.log("last name : " + row.lastName);
+																				//~ console.log("google ID : " + row.googleID);
+																				//~ console.log("banned ? : " + row.banned);
 																			}
 																		})
-						});	*/
+						});	
 						
 		pg.connect(dbURL, 	function(err, client) 
 						{      
