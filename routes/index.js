@@ -36,20 +36,21 @@ exports.connected = function(req, res)
 							var row = result.rows[i];
 							if (row.location==params['name']) 
 							{
-								client.query("SELECT * FROM Locations", function(err, result) {
-									for (var j = 0; j < result.rows.length; i++) {
-										if((result.rows[j].location==params['name'])&&(result.rows[j].text==params['comment'])){
-											already_exists=1;
-										}
-									}
-								});
+								already_exists=1;
+								//~ client.query("SELECT * FROM Locations", function(err, result) {
+									//~ for (var j = 0; j < result.rows.length; i++) {
+										//~ if((result.rows[j].location==params['name'])&&(result.rows[j].text==params['comment'])){
+											//~ already_exists=1;
+										//~ }
+									//~ }
+								//~ });
 							}
 						}
 						
 						if (already_exists==0)
 						{                                                                                        
 							client.query("INSERT INTO Locations(location, x, y, img_name) VALUES($1, $2, $3, $4)",[params['name'], params['x'], params['y'], "null"]);
-							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], "default_user"]);
+							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']]);
 							console.log("Added : name = " + params['name'] + ", x = " + params['x'] + ", y = " + params['y'] + ", comment = " + params['comment'] + ", login = " + params['login']);
 						}
 						else
@@ -88,14 +89,9 @@ SendPin = function (){
 		socket.on('AskForComment',function (data) {
 			pg.connect(dbURL, 	function(err, client) {
 				client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
-					//~ console.log(mydata);
-					console.log(err);
-					//~ console.log(result);
 					socket.emit('displayComments', result);
-					});
 				});
-				
-		console.log(data.location);
+			});
 		});
 	});	
 }

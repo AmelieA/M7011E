@@ -8,10 +8,6 @@
   <script type="text/javascript" src='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
   <script type="text/javascript" src="/javascripts/l.control.geosearch.js"></script>
   <script type="text/javascript" src="/javascripts/l.geosearch.provider.openstreetmap.js"></script>
-  <script src="/javascripts/jquery.js" type="text/javascript"></script>
-  <script src="/javascripts/jquery.imagesloaded.min.js" type="text/javascript"></script>
-  <script src="/javascripts/jQueryRotate.min.js" type="text/javascript"></script>
-  <script src="/javascripts/jquery.heapshot.js" type="text/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="/javascripts/bigSlide.js"></script>
   <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -37,11 +33,13 @@
 		</ul>
 		<ul id="ul" style="display:none" scrolling="yes">
 			<li><p id="NamePlace"><font color="white">Name</p></font></li>
+			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">#</button></li>
 			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
 			<div id="comments" class="comments"></div>
 		</ul>
 		<ul id="ulAdComment" style="display:none">
 			<li><p id="NamePlaceAdComment"><font color="white">Name</p></font></li>
+			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="returnButton();">-</button></li>
 			<li><textarea id="fakeCommentBox" cols="19" rows="7" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><button type="button" style="width: 176px;" onclick="SendComment();" >Send comment</button></li>
 		</ul>
@@ -121,6 +119,7 @@
 	
 	/*---PIN display---*/
     window.socket = io.connect();
+    window.picture = false;
     markers = null;
     socket.on('display', function (result) {
 	
@@ -148,8 +147,8 @@
 			menu.close();
 		}else if ((menu.state == "open") && (oldMarker != this.getLatLng())){
 			menu.close();
-			showComment(e.latlng.lat,e.latlng.lng);
 			setTimeout(function(){
+				showComment(e.latlng.lat,e.latlng.lng);
 				document.getElementById("ul").style.display = "";
 				document.getElementById("ulAd").style.display = "none";
 				document.getElementById("ulAdComment").style.display = "none";
@@ -164,38 +163,70 @@
 		oldMarker = this.getLatLng();
 	}
 	
-	function showComment(x,y){
-		var LocationName;
-		for (var i = 0; i < window.db.rows.length; i++) { //look for the right collom
-			if((window.db.rows[i].x == x)&&(window.db.rows[i].y == y)){
-				LocationName = window.db.rows[i].location;
-			}
+	function showPicture(){
+		if (window.picture){
+			window.picture = false;
+		}else{
+			window.picture = true;
 		}
-		
-		document.getElementById("NamePlace").innerHTML = LocationName ;
-		document.getElementById("NamePlace").setAttribute("style", "color:white;");
+		showComment(null,null);
+	}
+	
+	function showComment(x,y){
+		if((x!=null)&(y!=null)){
+			var LocationName;
+			for (var i = 0; i < window.db.rows.length; i++) { //look for the right collom
+				if((window.db.rows[i].x == x)&&(window.db.rows[i].y == y)){
+					LocationName = window.db.rows[i].location;
+				}
+			}
+			
+			document.getElementById("NamePlace").innerHTML = LocationName ;
+			document.getElementById("NamePlace").setAttribute("style", "color:white;");
+		}
+		else{
+			var LocationName = document.getElementById("NamePlace").innerHTML;
+		}
 		$('#comments').empty();
 		var node = document.getElementById("comments");
-		socket.emit('AskForComment', { location: LocationName });
-		socket.on('displayComments', function (result) { //select and put the good comments
-			node.innerHTML=" ";
-			for (var i = 0; i < result.rows.length; i++) {
-				node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
-				node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
-			}
-		});
+		if(!window.picture){
+			socket.emit('AskForComment', { location: LocationName });
+			socket.on('displayComments', function (result) { //select and put the good comments
+				node.innerHTML=" ";
+				for (var i = 0; i < result.rows.length; i++) {
+					node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
+					node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
+				}
+			});
+		}else{
+			node.innerHTML = "<ul>";
+			node.innerHTML += "<img src=\"/images/VISA.png\">";    // ----------------------------put pictures here ! -------------------------------------------------//
+			node.innerHTML += "<img src=\"/images/VISA.png\">";
+			node.innerHTML += "<img src=\"/images/VISA.png\">";
+			node.innerHTML += "<img src=\"/images/VISA.png\">";
+			node.innerHTML += "</ul>";
+		}
 	}
+	
+	function returnButton(){
+		//~ setTimeout(function(){
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			//~ }, 300);
+		}
 	
 	function adComment(){
 		menu.close();
 		document.getElementById("NamePlaceAdComment").innerHTML = document.getElementById("NamePlace").innerHTML ;
 		document.getElementById("NamePlaceAdComment").setAttribute("style", "color:white;");
-		setTimeout(function(){
+		//~ setTimeout(function(){
 			document.getElementById("ul").style.display = "none";
 			document.getElementById("ulAd").style.display = "none";
 			document.getElementById("ulAdComment").style.display = "";
 			menu.open();
-		}, 300);
+		//~ }, 300);
 	}
 	
 	function SendComment(){
