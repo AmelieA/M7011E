@@ -18,11 +18,7 @@ exports.index = function(req, res){
 exports.connected = function(req, res)
 {	
 	if (req.user != undefined){
-		//~ console.log(req.user);
-		//~ console.log(url.parse(req.url).pathname);
-		//~ if (('/mapbox/'+req.user.displayName) == url.parse(req.url).pathname){
-			//~ var user = req.user.displayName;
-			//~ console.log(req.params.user,' connected');
+		if (("/mapbox/"+req.user.displayName) == decodeURI(url.parse(req.url).pathname)){ //so that people don't send message under an other name
 			var user = req.params.user;
 			var params = querystring.parse(url.parse(req.url).query)
 			var already_exists = 0;	
@@ -55,11 +51,12 @@ exports.connected = function(req, res)
 						}
 						else
 						{
-								console.log("Can't add location : it already exists.");
+							console.log("Can't add location : it already exists.");
 						}
-				})
-			});
-    }
+						})
+					});
+			}
+		}
 			else 
 			{
 				console.log('Not an add request');
