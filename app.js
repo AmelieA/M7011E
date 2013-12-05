@@ -94,7 +94,7 @@ app.get('/auth/google/callback',
 	var userName = decodeURI(req.user.displayName);
 	//~ console.log("---------------------->",req.user);
 	var banned = user.checkUser(req.user.name.givenName,req.user.name.familyName,req.user.id);
-	//~ console.log("banned = ",banned);
+	console.log("banned = ",banned);
 		if(!banned){
 			res.redirect('/mapbox/'+userName);
 		}else{
