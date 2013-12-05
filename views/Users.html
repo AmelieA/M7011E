@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+	<title>VISA</title>
+</head>
+
+<body>
+	<form id="users">
+	</form>
+</body>
+
+<script>
+	window.socket = io.connect();
+	//~ $('#users').empty();
+	var node = document.getElementById("users");
+	socket.on('displayUsers', function (result) {
+		node.innerHTML="<p>     fistName  |   LastName   |   GoogleID   |   banned</p><br> ";
+		for (var i = 0; i < result.rows.length; i++) {
+			node.innerHTML += "<input type=\"checkbox\" name=\"googleID\" value=\""+result.rows[i].googleid+"\">"+result.rows[i].firstname+" "+result.rows[i].lastname+" "+result.rows[i].googleid+" "+result.rows[i].banned + "<br>";
+		}
+		node.innerHTML += "<br><button type=\"button\" onclick=\"sendBanned(this.form);\">banned them</button>"
+		node.innerHTML += "<br><button type=\"button\" onclick=\"sendUnBanned(this.form);\">unbanned them</button>"
+	});
+	
+	function sendBanned(form){
+		var banID = new Array();
+		for (var i = 0; i < document.getElementsByName("googleID").length; i++){
+			if (document.getElementsByName("googleID").item(i).checked){
+				//~ alert(document.getElementsByName("googleID").item(i).value);
+				banID[banID.length] = document.getElementsByName("googleID").item(i).value;
+				
+			}
+		}
+		socket.emit('AskForBan', { banIDs: banID });	
+	}
+	
+	function sendUnBanned(form){
+		var banID = new Array();
+		for (var i = 0; i < document.getElementsByName("googleID").length; i++){
+			if (document.getElementsByName("googleID").item(i).checked){
+				//~ alert(document.getElementsByName("googleID").item(i).value);
+				banID[banID.length] = document.getElementsByName("googleID").item(i).value;
+				
+			}
+		}
+		socket.emit('AskForUnBan', { banIDs: banID });
+	}
+</script>
+
+
+</html>
