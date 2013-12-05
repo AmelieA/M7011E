@@ -59,6 +59,34 @@ app.use(function(req, res, next){
   res.send(404, 'Sorry cant find that!');
 });
 
+/* -------------------Socket part ------------------------*/
+
+io.sockets.on('connection', function (socket) {
+	
+	console.log('CLIENT CONNECTED !!!!!!!!!');
+	
+	pg.connect(dbURL, 	function(err, client) {      
+		client.query("SELECT * FROM Locations", function(err, result) {
+			socket.emit('display', result);
+			});
+		});
+		
+	socket.on('AskForComment',function (data) {
+		pg.connect(dbURL, 	function(err, client) {
+			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
+				socket.emit('displayComments', result);
+			});
+		});
+	});
+	
+	socket.on('disconnect', function(){
+		console.log('CLIENT DISCONNECTED !!!!!!!!!');
+	});
+	
+	
+});	
+
+
 /* -------------------Google Authentication ------------------------*/
 passport.serializeUser(function(user, done) {
   done(null, user);

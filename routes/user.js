@@ -58,8 +58,8 @@ exports.checkUser = function(FirstName, LastName, GoogleID){
 				}
 			}
 			if (!exist){
-			console.log("adding "+FirstName+" into the database");
-			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
+//			console.log("adding "+FirstName+" into the database");
+//			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
 		
 			}else{
 				console.log(FirstName+" is already in the database");

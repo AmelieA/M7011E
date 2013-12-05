@@ -67,16 +67,17 @@ exports.connected = function(req, res)
 	}else{
 		res.redirect("/mapbox");
 	}
-	SendPin();
+//	SendPin();
 };
 
 exports.mapbox = function(req, res){
 	res.sendfile('views/mapbox.html');
-	SendPin();
+//	SendPin();
 };
 
-SendPin = function (){
+/*SendPin = function (){
 	console.log("sending pins");
+	
 	app.io.sockets.on('connection', function (socket) {
 		pg.connect(dbURL, 	function(err, client) {      
 			client.query("SELECT * FROM Locations", function(err, result) {
@@ -91,4 +92,4 @@ SendPin = function (){
 			});
 		});
 	});	
-}
+}*/
