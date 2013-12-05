@@ -14,7 +14,7 @@ exports.list = function(req, res){
   app.io.sockets.on('connection', function (socket) {
 		pg.connect(dbURL, 	function(err, client) {      
 			client.query("SELECT * FROM Users", function(err, result) {
-				console.log(result);
+				//~ console.log(result);
 				socket.emit('displayUsers', result);
 				});
 			});
@@ -33,7 +33,7 @@ exports.list = function(req, res){
 			console.log("ask for unban");
 			pg.connect(dbURL, 	function(err, client) {
 				for (var i=0; i<data.banIDs.length; i++){
-					console.log(data.banIDs[i]);
+					//~ console.log(data.banIDs[i]);
 					client.query("UPDATE Users SET banned = 'false' WHERE googleid = '"+data.banIDs[i]+"';", function(err, result) {
 						console.log("unban of "+data.banIDs[i]);
 					});
@@ -50,23 +50,23 @@ exports.checkUser = function(FirstName, LastName, GoogleID){
 	pg.connect(dbURL, function(err, client){      
 		client.query("SELECT * FROM Users", function(err, result) {
 			for (var i = 0; i < result.rows.length; i++) {
-				console.log(parseInt(result.rows[i].googleid), parseInt(GoogleID))
-				if (parseInt(result.rows[i].googleid) == parseInt(GoogleID)){
+				//~ console.log(result.rows[i].googleid,GoogleID);
+				//~ console.log(result.rows[i].googleid.localeCompare(GoogleID));
+				if (result.rows[i].googleid.localeCompare(GoogleID)==0){
 					exist = true;
 					ban = result.rows[i].banned
 				}
 			}
-			
-		})
-		if (!exist){
-			//~ console.log(FirstName, LastName, GoogleID);
-			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
+			if (!exist){
 			console.log("adding "+FirstName+" into the database");
+			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
 		
-		}else{
-			console.log(FirstName+" is already in the database");
-		}
+			}else{
+				console.log(FirstName+" is already in the database");
+			}
+			console.log("ban "+ban);
+			return(ban);
+		})
+		
 	})
-	return(ban);
-	
 };
