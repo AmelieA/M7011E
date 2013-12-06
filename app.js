@@ -65,16 +65,22 @@ io.sockets.on('connection', function (socket) {
 	
 	console.log('CLIENT CONNECTED !!!!!!!!!');
 	
+	//sending the pins
 	pg.connect(dbURL, 	function(err, client) {      
 		client.query("SELECT * FROM Locations", function(err, result) {
 			socket.emit('display', result);
+				client.end();
+//				pg.end();
 			});
 		});
-		
+	
+	//sending the comments	
 	socket.on('AskForComment',function (data) {
 		pg.connect(dbURL, 	function(err, client) {
 			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
 				socket.emit('displayComments', result);
+				client.end();
+				pg.end();
 			});
 		});
 	});
