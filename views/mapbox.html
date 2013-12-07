@@ -123,7 +123,7 @@
     markers = null;
     socket.on('display', function (result) {
 		
-		alert('Display event.');
+//		alert('Display event.');
 		
 		for (var i = 0; i < result.rows.length; i++) {
 			marker = L.marker([result.rows[i].x, result.rows[i].y]).addTo(map);

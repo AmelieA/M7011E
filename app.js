@@ -63,31 +63,29 @@ app.use(function(req, res, next){
 
 io.sockets.on('connection', function (socket) {
 	
-	console.log('CLIENT CONNECTED !!!!!!!!!');
+//	console.log('CLIENT CONNECTED !!!!!!!!!');
 	
 	//sending the pins
-	pg.connect(dbURL, 	function(err, client) {      
+	pg.connect(dbURL, 	function(err, client, done) {      
 		client.query("SELECT * FROM Locations", function(err, result) {
 			socket.emit('display', result);
-				client.end();
-//				pg.end();
+			done();
 			});
 		});
 	
 	//sending the comments	
 	socket.on('AskForComment',function (data) {
-		pg.connect(dbURL, 	function(err, client) {
+		pg.connect(dbURL, 	function(err, client, done) {
 			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
 				socket.emit('displayComments', result);
-				client.end();
-				pg.end();
+				done();				
 			});
 		});
 	});
 	
-	socket.on('disconnect', function(){
+/*	socket.on('disconnect', function(){
 		console.log('CLIENT DISCONNECTED !!!!!!!!!');
-	});
+	});	*/
 	
 	
 });	

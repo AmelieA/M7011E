@@ -26,7 +26,7 @@ exports.connected = function(req, res)
 			
 			//Adding a new location
 			if ('name' in params && 'x' in params && 'y' in params && 'comment' in params && 'login' in params) {        
-				pg.connect(dbURL,         function(err, client){      
+				pg.connect(dbURL, function(err, client, done){      
 					client.query("SELECT * FROM Locations", function(err, result) {
 						for (var i = 0; i < result.rows.length; i++) {
 							var row = result.rows[i];
@@ -53,8 +53,9 @@ exports.connected = function(req, res)
 						{
 							console.log("Can't add location : it already exists.");
 						}
-						})
-					});
+						done();
+					})
+				});
 			}
 		}
 			else 
@@ -67,29 +68,8 @@ exports.connected = function(req, res)
 	}else{
 		res.redirect("/mapbox");
 	}
-//	SendPin();
 };
 
 exports.mapbox = function(req, res){
 	res.sendfile('views/mapbox.html');
-//	SendPin();
 };
-
-/*SendPin = function (){
-	console.log("sending pins");
-	
-	app.io.sockets.on('connection', function (socket) {
-		pg.connect(dbURL, 	function(err, client) {      
-			client.query("SELECT * FROM Locations", function(err, result) {
-				socket.emit('display', result);
-				});
-			});
-		socket.on('AskForComment',function (data) {
-			pg.connect(dbURL, 	function(err, client) {
-				client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
-					socket.emit('displayComments', result);
-				});
-			});
-		});
-	});	
-}*/
