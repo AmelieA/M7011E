@@ -105,7 +105,7 @@
 	//~ alert(UserName);
 	if ((UserName != 'undefined') && (UserName != "")){
 		//~ alert("if");
-		document.getElementById("userName").innerHTML= "wellcome "+UserName;
+		document.getElementById("userName").innerHTML= "welcome "+UserName;
 		document.getElementById("loginHidden").value=UserName;
 		document.getElementById("google").innerHTML = "log out";
 		document.getElementById("google").href = '/logout';
@@ -128,7 +128,7 @@
 		for (var i = 0; i < result.rows.length; i++) {
 			marker = L.marker([result.rows[i].x, result.rows[i].y]).addTo(map);
 			marker.on('click', markerClick);
-			}
+		}
 		window.db = result;
 
     });
@@ -201,11 +201,17 @@
 				}
 			});
 		}else{
+
 			node.innerHTML = "<ul>";
-			node.innerHTML += "<img src=\"/images/VISA.png\">";    // ----------------------------put pictures here ! -------------------------------------------------//
-			node.innerHTML += "<img src=\"/images/VISA.png\">";
-			node.innerHTML += "<img src=\"/images/VISA.png\">";
-			node.innerHTML += "<img src=\"/images/VISA.png\">";
+			socket.emit('AskForImages', { location: LocationName });
+			socket.on('displayImages', function(result) {
+				node.innerHTML=" ";
+//				alert('display images event');
+//				alert(result.rows[0].img_name);
+				for (var i = 0; i < result.rows.length; i++) {
+					node.innerHTML += "<img src=            \'/images/" + result.rows[i].img_name + "  \' width='200' >";
+				}
+			});	
 			node.innerHTML += "</ul>";
 		}
 	}

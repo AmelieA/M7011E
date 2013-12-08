@@ -75,13 +75,27 @@ io.sockets.on('connection', function (socket) {
 	
 	//sending the comments	
 	socket.on('AskForComment',function (data) {
-		pg.connect(dbURL, 	function(err, client, done) {
+		pg.connect(dbURL, function(err, client, done) {
 			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
 				socket.emit('displayComments', result);
 				done();				
 			});
 		});
 	});
+	
+	//sending the images
+	socket.on('AskForImages', function (data) {
+		console.log('Event askforimages !!!!!!!!!!!!!!!!!!!!! ' + data.location);
+		pg.connect(dbURL, function(err, client, done) {
+			client.query("SELECT * FROM Images WHERE location='"+data.location+"' ", function(err,result) {
+				dirname = __dirname;
+//				console.log('dirname = ' + __dirname);
+				socket.emit('displayImages', result);
+				done();
+			});
+		});
+	});
+	
 	
 /*	socket.on('disconnect', function(){
 		console.log('CLIENT DISCONNECTED !!!!!!!!!');

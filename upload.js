@@ -17,7 +17,7 @@ app.get('/', function(req, res){
 
 
 
-app.post('/', 	function(req, res){
+app.post('/', function(req, res){
 
 					/* 
 					 * uploaded file : 'req.files.image'
@@ -29,67 +29,50 @@ app.post('/', 	function(req, res){
 					//	console.log(__dirname + "/images/" + req.files.image.name);
 					//	console.log("Location = " + req.body.location);
 
-				pg.connect(dbURL,         function(err, client){      
-					client.query("SELECT Locations.location AS location, Images.img_name AS img_name FROM Locations LEFT JOIN Images ON Locations.location=Images.location", function(err, result) {
-						for (var i = 0; i < result.rows.length; i++) {
-							var row = result.rows[i];
-							
-							var location_exists=0;
-							var imgname_taken=0;
-							
-							if (row.location==req.body.location) 
-							{
-								location_exists=1;
-							}
-							if (row.img_name==req.files.image.name)
-							{
-								imgname_taken=1;
-							}
-							console.log("row.location = " + row.location);
-							console.log("row.img_name = " + row.img_name);
-							console.log("req.files.image.name = " + req.files.image.name);
-							
-						}
+	pg.connect(dbURL, function(err, client, done){      
+		client.query("SELECT Locations.location AS location, Images.img_name AS img_name FROM Locations LEFT JOIN Images ON Locations.location=Images.location", function(err, result) {
+			for (var i = 0; i < result.rows.length; i++) {
+				var row = result.rows[i];
+				
+				var location_exists=0;
+				var imgname_taken=0;
 						
-						if ( (location_exists==1) && (imgname_taken==0) )
-						{
-							console.log("Location " + req.body.location + " exists."); 
-							res.send(format('<p><strong>Picture uploaded : </strong> %s </p>' + '<p><strong>Size : </strong> %d Kb </p>' + '<p><strong>File location : </strong> %s </p>'
-								, req.files.image.name
-								, req.files.image.size / 1024 | 0 
-								, __dirname + "/images/" + req.files.image.name
-								));
-
-						fs.rename(req.files.image.path, __dirname + "/images/" + req.files.image.name, function(){});
-						client.query("INSERT INTO Images(location, img_name, login) VALUES($1, $2, $3)",[req.body.location, req.files.image.name, "default_user"]);
-
-						}
+				if (row.location==req.body.location) {
+					location_exists=1;
+				}
+				if (row.img_name==req.files.image.name) {
+					imgname_taken=1;
+				}
+				console.log("row.location = " + row.location);
+				console.log("row.img_name = " + row.img_name);
+				console.log("req.files.image.name = " + req.files.image.name);
+			}
 						
-						else if (location_exists==0)
-						{
-							console.log("Location " + req.body.location + " doesn't exist. The picture has not been uploaded."); 
-							fs.unlink(req.files.image.path, function(){});
-							res.send('<p>The location doesn\'t exist. The picture has not been uploaded.</p>');
-						}
+			if ( (location_exists==1) && (imgname_taken==0) ) {
+				console.log("Location " + req.body.location + " exists."); 
+				res.send(format('<p><strong>Picture uploaded : </strong> %s </p>' + '<p><strong>Size : </strong> %d Kb </p>' + '<p><strong>File location : </strong> %s </p>'
+					, req.files.image.name
+					, req.files.image.size / 1024 | 0 
+					, __dirname + "/public/images/" + req.files.image.name
+				));
+
+				fs.rename(req.files.image.path, __dirname + "/public/images/" + req.files.image.name, function(){});
+				client.query("INSERT INTO Images(location, img_name, login) VALUES($1, $2, $3)",[req.body.location, req.files.image.name, "default_user"]);
+			}
 						
-						else
-						{
-							console.log("The file name" + req.files.image.name + " is already used, please choose another file name."); 
-							fs.unlink(req.files.image.path, function(){});
-							res.send('<p>This file name is already used. The picture has not been uploaded. Please choose another file name.</p>');
-						}
-						
-						
-						
-
-					})
-			});
-
-
-
-
-
-
+			else if (location_exists==0) {
+				console.log("Location " + req.body.location + " doesn't exist. The picture has not been uploaded."); 
+				fs.unlink(req.files.image.path, function(){});
+				res.send('<p>The location doesn\'t exist. The picture has not been uploaded.</p>');
+			}
+			else {
+				console.log("The file name" + req.files.image.name + " is already used, please choose another file name."); 
+				fs.unlink(req.files.image.path, function(){});
+				res.send('<p>This file name is already used. The picture has not been uploaded. Please choose another file name.</p>');
+			}
+			done();			
+		})
+	});
 });
 
 if (!module.parent) {
