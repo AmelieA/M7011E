@@ -35,6 +35,7 @@
 			<li><p id="NamePlace"><font color="white">Name</p></font></li>
 			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">#</button></li>
 			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
+			<li><button style="position: absolute; top:2%; left: 60%;" type="button" onclick="upload();">img</button></li>
 			<div id="comments" class="comments"></div>
 		</ul>
 		<ul id="ulAdComment" style="display:none">
@@ -209,7 +210,7 @@
 //				alert('display images event');
 //				alert(result.rows[0].img_name);
 				for (var i = 0; i < result.rows.length; i++) {
-					node.innerHTML += "<img src=            \'/images/" + result.rows[i].img_name + "  \' width='200' >";
+					node.innerHTML += "<a href=\'/images/" + result.rows[i].img_name + "\'> <img src=\'/images/" + result.rows[i].img_name + "\' width='200' ></a>";					
 				}
 			});	
 			node.innerHTML += "</ul>";
@@ -235,6 +236,13 @@
 			document.getElementById("ulAdComment").style.display = "";
 			menu.open();
 		//~ }, 300);
+	}
+	
+	function upload() {
+//		alert('upload');
+		newwindow=window.open("http://localhost:8000",'name','height=170,width=260');
+		if (window.focus) {newwindow.focus()}
+		return false;
 	}
 	
 	function SendComment(){
