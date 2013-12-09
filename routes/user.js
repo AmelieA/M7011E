@@ -47,9 +47,12 @@ exports.list = function(req, res){
 	//~ res.redirect("/users");
 };
 
-exports.checkUser = function(FirstName, LastName, GoogleID){
+exports.checkUser = function(req, res, userName){
 	var exist = false;
 	var ban = false;
+	var FirstName = req.user.name.givenName;
+	var LastName = req.user.name.familyName;
+	var GoogleID = req.user.id;
 	pg.connect(dbURL, function(err, client){      
 		client.query("SELECT * FROM Users", function(err, result) {
 			for (var i = 0; i < result.rows.length; i++) {
@@ -61,15 +64,23 @@ exports.checkUser = function(FirstName, LastName, GoogleID){
 				}
 			}
 			if (!exist){
-//			console.log("adding "+FirstName+" into the database");
-//			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
+			console.log("adding "+FirstName+" into the database");
+			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
 		
 			}else{
 				console.log(FirstName+" is already in the database");
 			}
 			console.log("ban "+ban);
-			return(ban);
+			
+			if(!ban){
+				console.log("redirected to mapbox");
+				res.redirect('/mapbox/'+userName);
+			}else{
+				console.log("redirected to logout");
+				res.redirect('/logout/');
+			}
 		})
 		
 	})
+	
 };
