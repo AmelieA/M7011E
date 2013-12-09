@@ -22,8 +22,8 @@
 <body>
 	<form id="menu" class="panel" role="navigation">
         <ul id="ulAd" style="">
-			<li><input id="locationName" type="text" name="name" value="name of the place" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
-			<li><textarea id="comment" name="comment" cols="19" rows="7" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><input id="locationName" type="text" size="20" name="name" value="name of the place" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
+			<li><textarea id="comment" name="comment" maxlength="255" cols="19" rows="10" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><font size="2"><font color="white">location :</font></font></li>
 			<input id="locationHiddenX" type="hidden" name="x" value="null" />
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
@@ -40,7 +40,7 @@
 		<ul id="ulAdComment" style="display:none">
 			<li><p id="NamePlaceAdComment"><font color="white">Name</p></font></li>
 			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="returnButton();">-</button></li>
-			<li><textarea id="fakeCommentBox" cols="19" rows="7" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><textarea id="fakeCommentBox" maxlength="255" cols="19" rows="10" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><button type="button" style="width: 176px;" onclick="SendComment();" >Send comment</button></li>
 		</ul>
 		<ul>
