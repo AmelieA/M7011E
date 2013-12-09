@@ -12,30 +12,33 @@ var app = require('../app');
 exports.list = function(req, res){
   res.sendfile('views/Users.html');
   app.io.sockets.on('connection', function (socket) {
-		pg.connect(dbURL, 	function(err, client) {      
+		pg.connect(dbURL, function(err, client, done) {      
 			client.query("SELECT * FROM Users", function(err, result) {
 				//~ console.log(result);
 				socket.emit('displayUsers', result);
+				done();
 				});
 			});
 		socket.on('AskForBan',function (data) {
 			console.log("ask for ban");
-			pg.connect(dbURL, 	function(err, client) {
+			pg.connect(dbURL, 	function(err, client, done) {
 				for (var i=0; i<data.banIDs.length; i++){
 					console.log(data.banIDs[i]);
 					client.query("UPDATE Users SET banned = 'true' WHERE googleid = '"+data.banIDs[i]+"';", function(err, result) {
 						console.log("ban of "+data.banIDs[i]);
+						done();
 					});
 				}
 			});
 		});
 		socket.on('AskForUnBan',function (data) {
 			console.log("ask for unban");
-			pg.connect(dbURL, 	function(err, client) {
+			pg.connect(dbURL, 	function(err, client, done) {
 				for (var i=0; i<data.banIDs.length; i++){
 					//~ console.log(data.banIDs[i]);
 					client.query("UPDATE Users SET banned = 'false' WHERE googleid = '"+data.banIDs[i]+"';", function(err, result) {
 						console.log("unban of "+data.banIDs[i]);
+						done();
 					});
 				}
 			});
@@ -58,8 +61,8 @@ exports.checkUser = function(FirstName, LastName, GoogleID){
 				}
 			}
 			if (!exist){
-			console.log("adding "+FirstName+" into the database");
-			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
+//			console.log("adding "+FirstName+" into the database");
+//			client.query("INSERT INTO Users(firstName, lastName, googleID, banned) VALUES('"+FirstName+"', '"+LastName+"', '"+GoogleID+"', false)");
 		
 			}else{
 				console.log(FirstName+" is already in the database");
