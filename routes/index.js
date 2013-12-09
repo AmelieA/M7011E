@@ -21,7 +21,8 @@ exports.connected = function(req, res)
 		if (("/mapbox/"+req.user.displayName) == decodeURI(url.parse(req.url).pathname)){ //so that people don't send message under an other name
 			var user = req.params.user;
 			var params = querystring.parse(url.parse(req.url).query)
-			var already_exists = 0;	
+			var createComment = 1;	
+			var createLocation = 1;
 			
 			
 			//Adding a new location
@@ -32,26 +33,37 @@ exports.connected = function(req, res)
 							var row = result.rows[i];
 							if (row.location==params['name']) 
 							{
-								already_exists=1;
-								//~ client.query("SELECT * FROM Locations", function(err, result) {
-									//~ for (var j = 0; j < result.rows.length; i++) {
-										//~ if((result.rows[j].location==params['name'])&&(result.rows[j].text==params['comment'])){
-											//~ already_exists=1;
-										//~ }
-									//~ }
-								//~ });
+								createLocation=0;
+								client.query("SELECT * FROM Locations", function(err, result) {
+									for (var j = 0; j < result.rows.length; i++) {
+										if((result.rows[j].location==params['name'])&&(result.rows[j].text==params['comment'])){
+											createComment=0;
+											console.log("already exist");
+										}
+									}
+								});
 							}
 						}
 						
-						if (already_exists==0)
-						{                                                                                        
-							client.query("INSERT INTO Locations(location, x, y, img_name) VALUES($1, $2, $3, $4)",[params['name'], params['x'], params['y'], "null"]);
-							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']]);
-							console.log("Added : name = " + params['name'] + ", x = " + params['x'] + ", y = " + params['y'] + ", comment = " + params['comment'] + ", login = " + params['login']);
-						}
-						else
-						{
-							console.log("Can't add location : it already exists.");
+						if (createLocation){
+							client.query("INSERT INTO Locations(location, x, y, img_name) VALUES($1, $2, $3, $4)",[params['name'], params['x'], params['y'], "null"],function(err, result) {
+								if(err) {
+									return console.error('error running query', err);
+								}else{
+									console.log("adding Locations("+params['name']+", "+ params['x']+", "+params['y']+", "+ "null");	
+								}
+							});
+						}if (createComment){
+							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']],function(err, result) {
+								if(err) {
+									return console.error('error running query', err);
+								}else{
+									console.log("Adding Comments("+params['name']+", "+ params['comment']+", "+ params['login']+")");
+								}
+							});
+							
+						}else{
+							console.log("request already saved.");
 						}
 						done();
 					})
