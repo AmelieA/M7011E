@@ -52,6 +52,9 @@ exports.connected = function(req, res)
 								}else{
 									console.log("adding Locations("+params['name']+", "+ params['x']+", "+params['y']+", "+ "null");	
 								}
+								if(result){
+									console.log(result);
+								}
 							});
 						}if (createComment){
 							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']],function(err, result) {
@@ -59,6 +62,9 @@ exports.connected = function(req, res)
 									return console.error('error running query', err);
 								}else{
 									console.log("Adding Comments("+params['name']+", "+ params['comment']+", "+ params['login']+")");
+								}
+								if(result){
+									console.log(result);
 								}
 							});
 							
