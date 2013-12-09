@@ -139,13 +139,7 @@ app.get('/auth/google/callback',
   function(req, res) {
 	var userName = decodeURI(req.user.displayName);
 	//~ console.log("---------------------->",req.user);
-	var banned = user.checkUser(req, res,userName);
-	//~ console.log("banned = ",banned);
-		//~ if(!banned){
-			//~ res.redirect('/mapbox/'+userName);
-		//~ }else{
-			//~ res.redirect('/logout/'+userName);
-		//~ }
+	user.checkUser(req, res, userName);
   });
 
 app.get('/logout', function(req, res){
