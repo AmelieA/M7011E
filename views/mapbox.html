@@ -8,52 +8,62 @@
   <script type="text/javascript" src='http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js'></script>
   <script type="text/javascript" src="/javascripts/l.control.geosearch.js"></script>
   <script type="text/javascript" src="/javascripts/l.geosearch.provider.openstreetmap.js"></script>
-  <noscript>Sorry, your browser does not support JavaScript!</noscript>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="/javascripts/bigSlide.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <noscript>Sorry, your browser does not support JavaScript !</noscript>
   <link href='/stylesheets/mapbox.css' rel='stylesheet' />
+<!--
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css" media="screen">
+-->
   <link rel="shortcut icon" href="/images/VISA-favicon.ico" >
   
 </head>
 <body>
 	<form id="menu" class="panel" role="navigation">
         <ul id="ulAd" style="">
-			<li><input type="text" name="name" value="name of the place" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
-			<li><textarea id=comment name="comment" cols="19" rows="7" style="color:#888;" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><input id="locationName" type="text" size="20" name="name" value="name of the place" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" ><br></li>
+			<li><textarea id="comment" name="comment" maxlength="255" cols="19" rows="10" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
 			<li><font size="2"><font color="white">location :</font></font></li>
-			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
-			<li><input type="submit" value="add" style="width: 176px;"></li>
 			<input id="locationHiddenX" type="hidden" name="x" value="null" />
 			<input id="locationHiddenY" type="hidden" name="y" value="null" />
-			<input id="loginHidden" type="hidden" name="login" value="default_user" />
+			<input id="loginHidden" type="hidden" name="login" value="null" />
+			<li><p id="location"><font size="1"><font color="white">select the location by clicking on the map</p></font></font></li>
+			<li><input id="adButton" type="submit" value="add" style="width: 176px;"></li>
 		</ul>
 		<ul id="ul" style="display:none" scrolling="yes">
-			<li><p><font color="white">Name</p></font></li>
-			<div class="comments">
-				<p class="user">from Amélie on the 28/11/13</p>
-				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-				<p class="user">from Amélie on the 27/11/13</p>
-				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-				<p class="user">from Amélie on the 28/11/13</p>
-				<p class="comment">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-
-			</div>
+			<li><p id="NamePlace"><font color="white">Name</p></font></li>
+			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">#</button></li>
+			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
+			<li><button style="position: absolute; top:2%; left: 60%;" type="button" onclick="upload();">img</button></li>
+			<div id="comments" class="comments"></div>
+		</ul>
+		<ul id="ulAdComment" style="display:none">
+			<li><p id="NamePlaceAdComment"><font color="white">Name</p></font></li>
+			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="returnButton();">-</button></li>
+			<li><textarea id="fakeCommentBox" maxlength="255" cols="19" rows="10" style="color:#4C4C33; background: rgba(255,255,255,.5);" onfocus="inputFocus(this)" onblur="inputBlur(this)" >comments</textarea></li>
+			<li><button type="button" style="width: 176px;" onclick="SendComment();" >Send comment</button></li>
 		</ul>
 		<ul>
-			<li><p id="userName" style="position:absolute; bottom:3%;" ><font size="1"><font color="white"></p></font></font></li>
+			<li><p id="userName" style="position:absolute; bottom:1%;" ><font size="1"><font color="white"></p></font></font></li>
 			<li><a id="google" style="position:absolute; bottom:0;" href="/auth/google">Sign In with Google</a></li>
         </ul>
     </form>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="/javascripts/bigSlide.js"></script>
+		
+
     <script>
 		function inputFocus(i){
 			if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
 		}
 		function inputBlur(i){
-			if(i.value==""){ i.value=i.defaultValue; i.style.color="#888"; }
+			if(i.value==""){ i.value=i.defaultValue; i.style.color="#4C4C33"; }
 		}
     </script>
 <a href="menu" class="menu-link"><img src="/images/tab-nav.png" alt="some_text"></a>
 <div id='map'></div>
+
+
+
 	<script>
 	/*    BigSlide   */
 	$(document).ready(function() {
@@ -75,10 +85,17 @@
 		document.getElementById("location").setAttribute("style", "font-size: 12px;");
 		document.getElementById("locationHiddenX").value=e.latlng.lat;
 		document.getElementById("locationHiddenY").value=e.latlng.lng;
-		document.getElementById("ulAd").style.display = "";
-		document.getElementById("ul").style.display = "none";
-		menu.open();
-		//~ marker = L.marker([e.latlng.lat, e.latlng.lng], {draggable:true}).addTo(map);
+		if (document.getElementById("ulAd").style.display != ""){
+			menu.close();
+			setTimeout(function(){
+				document.getElementById("ul").style.display = "none";
+				document.getElementById("ulAd").style.display = "";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			}, 300);
+		}else{
+			menu.open();
+		}
 	}
 	map.on('click', onMapClick);
 	
@@ -87,9 +104,10 @@
 	var pathArray = window.location.pathname.split( '/' );
 	var UserName = decodeURI(pathArray[2]);
 	//~ alert(UserName);
-	if ((UserName != undefined) && (!UserName) && (UserName != "")){
+	if ((UserName != 'undefined') && (UserName != "")){
 		//~ alert("if");
-		document.getElementById("userName").innerHTML= "wellcome "+UserName;
+		document.getElementById("userName").innerHTML= "welcome "+UserName;
+		document.getElementById("loginHidden").value=UserName;
 		document.getElementById("google").innerHTML = "log out";
 		document.getElementById("google").href = '/logout';
 	}
@@ -100,24 +118,152 @@
 		document.getElementById("google").href = "/auth/google";
 	}
 	
-	/*   pin display   */
-	
-	marker = L.marker([65, 22],{clickable:true}).addTo(map);
-	marker.on('click', function () {
-		if (document.getElementById("ulAd").style.display == ""){
-			menu.close();
-			setTimeout('', 300000);
-			document.getElementById("ul").style.display = "";
-			document.getElementById("ulAd").style.display = "none";
-			menu.open();
+	/*---PIN display---*/
+    window.socket = io.connect();
+    window.picture = false;
+    markers = null;
+    socket.on('display', function (result) {
+		
+//		alert('Display event.');
+		
+		for (var i = 0; i < result.rows.length; i++) {
+			marker = L.marker([result.rows[i].x, result.rows[i].y]).addTo(map);
+			marker.on('click', markerClick);
 		}
-		else if(menu.state == "open"){
+		window.db = result;
+
+    });
+	
+	var oldMarker;
+	function markerClick(e) {
+		if (document.getElementById("ulAd").style.display == ""){ //if you can "see" the ad menu
 			menu.close();
+			showComment(e.latlng.lat,e.latlng.lng);
+			setTimeout(function(){
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			}, 300);
+		}
+		else if((menu.state == "open") && (oldMarker == this.getLatLng())){
+			menu.close();
+		}else if ((menu.state == "open") && (oldMarker != this.getLatLng())){
+			menu.close();
+			setTimeout(function(){
+				showComment(e.latlng.lat,e.latlng.lng);
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			}, 300);
+		}else if ((menu.state == "closed")){
+			showComment(e.latlng.lat,e.latlng.lng);
+			setTimeout(function(){
+				menu.open();
+			}, 300);
+		}
+		oldMarker = this.getLatLng();
+	}
+	
+	function showPicture(){
+		if (window.picture){
+			window.picture = false;
 		}else{
-			menu.open();
+			window.picture = true;
 		}
-	});
+		showComment(null,null);
+	}
 	
+	function showComment(x,y){
+		if((x!=null)&(y!=null)){
+			var LocationName;
+			for (var i = 0; i < window.db.rows.length; i++) { //look for the right collom
+				if((window.db.rows[i].x == x)&&(window.db.rows[i].y == y)){
+					LocationName = window.db.rows[i].location;
+				}
+			}
+			
+			document.getElementById("NamePlace").innerHTML = LocationName ;
+			document.getElementById("NamePlace").setAttribute("style", "color:white;");
+		}
+		else{
+			var LocationName = document.getElementById("NamePlace").innerHTML;
+		}
+		$('#comments').empty();
+		var node = document.getElementById("comments");
+		if(!window.picture){
+			socket.emit('AskForComment', { location: LocationName });
+			socket.on('displayComments', function (result) { //select and put the good comments
+				node.innerHTML=" ";
+				for (var i = 0; i < result.rows.length; i++) {
+					node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
+					node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
+				}
+			});
+		}else{
+
+			node.innerHTML = "<ul>";
+			socket.emit('AskForImages', { location: LocationName });
+			socket.on('displayImages', function(result) {
+				node.innerHTML=" ";
+//				alert('display images event');
+//				alert(result.rows[0].img_name);
+				for (var i = 0; i < result.rows.length; i++) {
+					node.innerHTML += "<a href=\'/images/" + result.rows[i].img_name + "\'> <img src=\'/images/" + result.rows[i].img_name + "\' width='200' ></a>";					
+				}
+			});	
+			node.innerHTML += "</ul>";
+		}
+	}
+	
+	function returnButton(){
+		//~ setTimeout(function(){
+				document.getElementById("ul").style.display = "";
+				document.getElementById("ulAd").style.display = "none";
+				document.getElementById("ulAdComment").style.display = "none";
+				menu.open();
+			//~ }, 300);
+		}
+	
+	function adComment(){
+		menu.close();
+		document.getElementById("NamePlaceAdComment").innerHTML = document.getElementById("NamePlace").innerHTML ;
+		document.getElementById("NamePlaceAdComment").setAttribute("style", "color:white;");
+		//~ setTimeout(function(){
+			document.getElementById("ul").style.display = "none";
+			document.getElementById("ulAd").style.display = "none";
+			document.getElementById("ulAdComment").style.display = "";
+			menu.open();
+		//~ }, 300);
+	}
+	
+	function upload() {
+//		alert('upload');
+		newwindow=window.open("http://localhost:8000",'name','height=170,width=260');
+		if (window.focus) {newwindow.focus()}
+		return false;
+	}
+	
+	function SendComment(){
+		document.getElementById("loginHidden").value=UserName;
+		for (var i = 0; i < window.db.rows.length; i++) { //look for the gps coordonates
+			if(window.db.rows[i].location == document.getElementById("NamePlace").innerHTML){
+				LocationName = window.db.rows[i].location;
+				document.getElementById("locationHiddenX").value=window.db.rows[i].x;
+				document.getElementById("locationHiddenY").value=window.db.rows[i].y;
+			}
+		}
+		document.getElementById("comment").value = document.getElementById("fakeCommentBox").value;
+		document.getElementById("locationName").value = document.getElementById("NamePlace").innerHTML;
+		$("#adButton").click();
+	}
 	</script>
+	
+	<script type="text/javascript">
+    
+    </script>
+	
+	
 </body>
 </html>

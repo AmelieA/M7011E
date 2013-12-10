@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -26,6 +25,9 @@ var querystring = require('querystring');
 
 var pg = require('pg').native;
 var dbURL = "tcp://nodetest:pika@localhost/dbtest";
+
+var io = require('socket.io').listen(server);
+exports.io=io;
 
 // all environments
 app.set('port', process.env.PORT || 8080);
@@ -56,6 +58,52 @@ app.get('/users', user.list);
 app.use(function(req, res, next){
   res.send(404, 'Sorry cant find that!');
 });
+
+/* -------------------Socket part ------------------------*/
+
+io.sockets.on('connection', function (socket) {
+	
+//	console.log('CLIENT CONNECTED !!!!!!!!!');
+	
+	//sending the pins
+	pg.connect(dbURL, 	function(err, client, done) {      
+		client.query("SELECT * FROM Locations", function(err, result) {
+			socket.emit('display', result);
+			done();
+			});
+		});
+	
+	//sending the comments	
+	socket.on('AskForComment',function (data) {
+		pg.connect(dbURL, function(err, client, done) {
+			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
+				socket.emit('displayComments', result);
+				done();				
+			});
+		});
+	});
+	
+	//sending the images
+	socket.on('AskForImages', function (data) {
+		console.log('Event askforimages !!!!!!!!!!!!!!!!!!!!! ' + data.location);
+		pg.connect(dbURL, function(err, client, done) {
+			client.query("SELECT * FROM Images WHERE location='"+data.location+"' ", function(err,result) {
+				dirname = __dirname;
+//				console.log('dirname = ' + __dirname);
+				socket.emit('displayImages', result);
+				done();
+			});
+		});
+	});
+	
+	
+/*	socket.on('disconnect', function(){
+		console.log('CLIENT DISCONNECTED !!!!!!!!!');
+	});	*/
+	
+	
+});	
+
 
 /* -------------------Google Authentication ------------------------*/
 passport.serializeUser(function(user, done) {
@@ -89,9 +137,15 @@ app.get('/auth/google',
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/google' }),
   function(req, res) {
-	var user = decodeURI(req.user.displayName);
-	console.log(user);
-    res.redirect('/mapbox/'+user);
+	var userName = decodeURI(req.user.displayName);
+	//~ console.log("---------------------->",req.user);
+	var banned = user.checkUser(req, res,userName);
+	//~ console.log("banned = ",banned);
+		//~ if(!banned){
+			//~ res.redirect('/mapbox/'+userName);
+		//~ }else{
+			//~ res.redirect('/logout/'+userName);
+		//~ }
   });
 
 app.get('/logout', function(req, res){
