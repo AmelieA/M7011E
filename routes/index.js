@@ -26,6 +26,7 @@ exports.connected = function(req, res)
 			
 			//Adding a new location
 			if ('name' in params && 'x' in params && 'y' in params && 'comment' in params && 'login' in params) {        
+				console.log("Add location request !!!!!!!!!!!!!!!!!!!!");
 				pg.connect(dbURL, function(err, client, done){      
 					client.query("SELECT * FROM Locations", function(err, result) {
 						for (var i = 0; i < result.rows.length; i++) {
@@ -57,15 +58,38 @@ exports.connected = function(req, res)
 					})
 				});
 			}
-		}
-			else 
-			{
-				console.log('Not an add request');
+			else if ('name' in params && 'comment' in params && 'login' in params) {
+				console.log("Add comment request !!!!!!!!!!!!!!!!!!!!");
+					pg.connect(dbURL, function(err, client, done) {
+						client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']], function(err, result){
+							done();
+						});		
+					});
 			}
+		}
+		
+		else {
+			console.log('Not an add request');
+		}
 
 			res.setHeader("Content-Type", "text/html");
 			res.sendfile('views/mapbox.html');
-	}else{
+	}
+	
+	//Adding a comment on an existing location
+	else if ('name' in params && 'comment' in params && 'login' in params) {
+		console.log("Add comment request !!!!!!!!!!!!!!!!!!!!");
+		pg.connect(dbURL, function(err, client, done) {
+			client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']], function(err, result){
+				done();
+			});		
+		});
+	}
+	
+	
+	
+	
+	else{
 		res.redirect("/mapbox");
 	}
 };

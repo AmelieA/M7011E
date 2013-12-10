@@ -73,7 +73,7 @@ io.sockets.on('connection', function (socket) {
 			});
 		});
 	
-	//sending the comments	
+	//displaying the comments for the user	
 	socket.on('AskForComment',function (data) {
 		pg.connect(dbURL, function(err, client, done) {
 			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
