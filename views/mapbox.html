@@ -34,8 +34,10 @@
 		<ul id="ul" style="display:none" scrolling="yes">
 			<li><p id="NamePlace"><font color="white">Name</p></font></li>
 			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">#</button></li>
-			<li><button style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
+			<li><button id="adCommentButton" style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
+<!--
 			<li><button style="position: absolute; top:2%; left: 60%;" type="button" onclick="upload();">img</button></li>
+-->
 			<div id="comments" class="comments"></div>
 		</ul>
 		<ul id="ulAdComment" style="display:none">
@@ -169,8 +171,16 @@
 	function showPicture(){
 		if (window.picture){
 			window.picture = false;
+			document.getElementById("adCommentButton").onclick=function() 
+			{
+				adComment();
+			}
 		}else{
 			window.picture = true;
+			document.getElementById("adCommentButton").onclick=function() 
+			{
+				upload();
+			}
 		}
 		showComment(null,null);
 	}
@@ -258,6 +268,13 @@
 		document.getElementById("locationName").value = document.getElementById("NamePlace").innerHTML;
 		$("#adButton").click();
 	}
+	
+	//~ function fromTheServer(){
+		//~ socket.on('talkToClient', function (result) {
+			//~ alert(result);
+		//~ }
+	//~ }
+	
 	</script>
 	
 	<script type="text/javascript">
