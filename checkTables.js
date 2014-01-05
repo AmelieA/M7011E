@@ -17,6 +17,7 @@ function checkTables()
 									//~ console.log("banned ? : " + row.banned);
 								}
 								done();
+								if(err) {return console.error(err);}
 						})
 
 		});	
@@ -32,6 +33,7 @@ function checkTables()
 									console.log("y: " + row.y + "\n");
 								}
 								done();
+								if(err) {return console.error(err);}
 							})
 
 						});
@@ -43,9 +45,11 @@ function checkTables()
 					var row = result.rows[i];
 					console.log("location: " + row.location);
 					console.log("text: " + row.text);
+					console.log("date: " + row.date);
 					console.log("login: " + row.login + "\n");
 				}
 				done();
+				if(err) {return console.error(err);}
 			})
 		});
 		
@@ -56,9 +60,11 @@ function checkTables()
 						var row = result.rows[i];
 						console.log("location: " + row.location);
 						console.log("img_name: " + row.img_name);
-						console.log("login: " + row.login + "\n");
+						console.log("login: " + row.login);
+						console.log("date: " + row.date + "\n");
 					}
 					done();
+					if(err) {return console.error(err);}
 				})
 			});		
 		

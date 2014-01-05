@@ -46,24 +46,26 @@ exports.connected = function(req, res)
 						if (already_exists==0)
 						{                                                                                        
 							client.query("INSERT INTO Locations(location, x, y, img_name) VALUES($1, $2, $3, $4)",[params['name'], params['x'], params['y'], "null"]);
-							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']]);
+							var d=new Date();
+							client.query("INSERT INTO Comments(location, text, login, date) VALUES($1, $2, $3, $4)",[params['name'], params['comment'], params['login'], d.toString()]);
 							console.log("Added : name = " + params['name'] + ", x = " + params['x'] + ", y = " + params['y'] + ", comment = " + params['comment'] + ", login = " + params['login']);
 						}
-						else
+						//Adding a comment
+						else 
 						{
-							client.query("INSERT INTO Comments(location, text, login) VALUES($1, $2, $3)",[params['name'], params['comment'], params['login']]);
-							console.log("Comment added");
-						//	console.log("Can't add location : it already exists.");
+							var d=new Date();
+							client.query("INSERT INTO Comments(location, text, login, date) VALUES($1, $2, $3, $4)",[params['name'], params['comment'], params['login'], d.toString()]);
+						//	console.log("Comment added");
 						}
 						done();
+						if(err) {return console.error(err);}
 					})
 				});
 			}
 		}
-			else 
-			{
-				console.log('Not an add request');
-			}
+		else {
+			console.log('Not an add request');
+		}
 
 			res.setHeader("Content-Type", "text/html");
 			res.sendfile('views/mapbox.html');

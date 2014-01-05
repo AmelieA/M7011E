@@ -33,7 +33,7 @@
 		</ul>
 		<ul id="ul" style="display:none" scrolling="yes">
 			<li><p id="NamePlace"><font color="white">Name</p></font></li>
-			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">#</button></li>
+			<li><button style="position: absolute; top:2%; left: 75%;" type="button" onclick="showPicture();">♦</button></li>
 			<li><button id="adCommentButton" style="position: absolute; top:2%; left: 85%;" type="button" onclick="adComment();">+</button></li>
 <!--
 			<li><button style="position: absolute; top:2%; left: 60%;" type="button" onclick="upload();">img</button></li>
@@ -101,7 +101,6 @@
 	}
 	map.on('click', onMapClick);
 	
-	
 	/*   login part   */
 	var pathArray = window.location.pathname.split( '/' );
 	var UserName = decodeURI(pathArray[2]);
@@ -124,12 +123,40 @@
     window.socket = io.connect();
     window.picture = false;
     markers = null;
+    
+    socket.on('notLoggedIn', function() {
+		alert('Please login if you want to perform actions.');
+	});
+	
+	socket.on('cantPlaceLocation', function() {
+		alert('The location can\'t be placed there !');
+	});
+	
+	var bougah;
+	var site;
+	
+	socket.on('sendLogin', function(name) {
+		//alert(name);
+		bougah = name;
+	});	
+    
+    var greenIcon = L.icon({
+		iconUrl: 'http://s27.postimg.org/x7qvvujqn/marker_icon_green.png',
+		shadowUrl: 'http://s29.postimg.org/gax7pomtf/marker_shadow.png',
+
+		iconSize:     [25, 41], // size of the icon
+		shadowSize:   [41, 41], // size of the shadow
+		iconAnchor:   [12, 40], // point of the icon which will correspond to marker's location
+		shadowAnchor: [11, 40],  // the same for the shadow
+	});    
+    
     socket.on('display', function (result) {
 		
 //		alert('Display event.');
 		
 		for (var i = 0; i < result.rows.length; i++) {
-			marker = L.marker([result.rows[i].x, result.rows[i].y]).addTo(map);
+			marker = L.marker([result.rows[i].x, result.rows[i].y], {icon: greenIcon}).addTo(map);
+//					 L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map);
 			marker.on('click', markerClick);
 		}
 		window.db = result;
@@ -196,6 +223,7 @@
 			
 			document.getElementById("NamePlace").innerHTML = LocationName ;
 			document.getElementById("NamePlace").setAttribute("style", "color:white;");
+			
 		}
 		else{
 			var LocationName = document.getElementById("NamePlace").innerHTML;
@@ -205,9 +233,9 @@
 		if(!window.picture){
 			socket.emit('AskForComment', { location: LocationName });
 			socket.on('displayComments', function (result) { //select and put the good comments
-				node.innerHTML=" ";
+				node.innerHTML="<b>Comments :</b>";
 				for (var i = 0; i < result.rows.length; i++) {
-					node.innerHTML += "<p class=\"user\">from "+result.rows[i].login+ "</p>";
+					node.innerHTML += "<p class=\"user\">from "+ result.rows[i].login + "<br>--- " + result.rows[i].date + " ---</p>";
 					node.innerHTML += "<p class=\"comment\"> "+result.rows[i].text+ "</p>";
 				}
 			});
@@ -216,11 +244,12 @@
 			node.innerHTML = "<ul>";
 			socket.emit('AskForImages', { location: LocationName });
 			socket.on('displayImages', function(result) {
-				node.innerHTML=" ";
+				node.innerHTML="<b>Pictures : </b>";
 //				alert('display images event');
-//				alert(result.rows[0].img_name);
+				site = { location: LocationName }.location;
 				for (var i = 0; i < result.rows.length; i++) {
-					node.innerHTML += "<a href=\'/images/" + result.rows[i].img_name + "\'> <img src=\'/images/" + result.rows[i].img_name + "\' width='200' ></a>";					
+					node.innerHTML += "<br><br>";
+					node.innerHTML += "<a href=\'/images/" + result.rows[i].img_name + "\'> <img src=\'/images/" + result.rows[i].img_name + "\' width='194' border='3' title='posted by " + result.rows[i].login + "  ---  " + result.rows[i].date +      " ---'></a>";							
 				}
 			});	
 			node.innerHTML += "</ul>";
@@ -250,7 +279,7 @@
 	
 	function upload() {
 //		alert('upload');
-		newwindow=window.open("http://localhost:8000",'name','height=170,width=260');
+		newwindow=window.open("http://localhost:8000/?name=" + bougah + "&site=" + site,'name','height=170,width=260');
 		if (window.focus) {newwindow.focus()}
 		return false;
 	}

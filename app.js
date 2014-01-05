@@ -29,6 +29,10 @@ var dbURL = "tcp://nodetest:pika@localhost/dbtest";
 var io = require('socket.io').listen(server);
 exports.io=io;
 
+var loggedIn=1;
+var invalidLocation =0;
+var name="null";
+
 // all environments
 app.set('port', process.env.PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
@@ -50,14 +54,40 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.mapbox);
-app.get('/mapbox/*', routes.connected);
-app.get('/mapbox*', routes.mapbox);
+app.get('/', notLoggedIn);
+//app.get('/mapbox/*', routes.connected);
+app.get('/mapbox/*', userAllowed);
+app.get('/mapbox*', notLoggedIn);
 app.get('/users', user.list);
 
 app.use(function(req, res, next){
-  res.send(404, 'Sorry cant find that!');
+  res.send(404, 'Sorry can\'t find that!');
 });
+
+function notLoggedIn(req,res){
+	routes.mapbox(req,res);
+//	console.log("User is not logged-in");
+	loggedIn=0;
+}
+
+function userAllowed(req,res){
+//	console.log("User is logged-in and is allowed to perform actions.");
+//	console.log("x=%d , y=%d", querystring.parse(url.parse(req.url).query)['x'], querystring.parse(url.parse(req.url).query)['y']);
+	if ( (querystring.parse(url.parse(req.url).query)['x']>85.05113063088963) || (querystring.parse(url.parse(req.url).query)['x']<-60.00002146881433) || (querystring.parse(url.parse(req.url).query)['y']>195.7763671875) || (querystring.parse(url.parse(req.url).query)['y']<-199.3359375) ) {
+		//The new location must not be placed off-limits the map !
+		//console.log("Invalid location !");
+		routes.mapbox(req,res);
+		invalidLocation=1;
+	}
+	else {
+		routes.connected(req,res);
+	}
+	
+	name = url.parse(req.url).pathname.substring(8,url.parse(req.url).pathname.length);
+	
+	
+}
+
 
 /* -------------------Socket part ------------------------*/
 
@@ -65,11 +95,24 @@ io.sockets.on('connection', function (socket) {
 	
 //	console.log('CLIENT CONNECTED !!!!!!!!!');
 	
+	if (loggedIn==0) {
+		socket.emit('notLoggedIn');
+		loggedIn=1;
+	}
+	
+	if (invalidLocation==1) {
+		socket.emit('cantPlaceLocation');
+		invalidLocation=0;
+	}
+	
+	socket.emit('sendLogin', name);
+	
 	//sending the pins
 	pg.connect(dbURL, 	function(err, client, done) {      
 		client.query("SELECT * FROM Locations", function(err, result) {
 			socket.emit('display', result);
 			done();
+			if(err) {return console.error(err);}
 			});
 		});
 	
@@ -78,20 +121,21 @@ io.sockets.on('connection', function (socket) {
 		pg.connect(dbURL, function(err, client, done) {
 			client.query("SELECT * FROM Comments WHERE location='"+data.location+"' ", function(err, result) {
 				socket.emit('displayComments', result);
-				done();				
+				done();	
+				if(err) {return console.error(err);}			
 			});
 		});
 	});
 	
 	//sending the images
 	socket.on('AskForImages', function (data) {
-		console.log('Event askforimages !!!!!!!!!!!!!!!!!!!!! ' + data.location);
 		pg.connect(dbURL, function(err, client, done) {
 			client.query("SELECT * FROM Images WHERE location='"+data.location+"' ", function(err,result) {
 				dirname = __dirname;
 //				console.log('dirname = ' + __dirname);
 				socket.emit('displayImages', result);
 				done();
+				if(err) {return console.error(err);}
 			});
 		});
 	});
