@@ -93,7 +93,7 @@ function userAllowed(req,res){
 
 io.sockets.on('connection', function (socket) {
 	
-//	console.log('CLIENT CONNECTED !!!!!!!!!');
+	console.log('CLIENT CONNECTED !!!!!!!!!');
 	
 	if (loggedIn==0) {
 		socket.emit('notLoggedIn');
@@ -143,7 +143,7 @@ io.sockets.on('connection', function (socket) {
 	
 /*	socket.on('disconnect', function(){
 		console.log('CLIENT DISCONNECTED !!!!!!!!!');
-	});	*/
+	});	*/	
 	
 	
 });	

@@ -124,6 +124,10 @@
     window.picture = false;
     markers = null;
     
+    var bougah;
+	var site;
+
+    
     socket.on('notLoggedIn', function() {
 		alert('Please login if you want to perform actions.');
 	});
@@ -131,18 +135,16 @@
 	socket.on('cantPlaceLocation', function() {
 		alert('The location can\'t be placed there !');
 	});
-	
-	var bougah;
-	var site;
-	
+		
 	socket.on('sendLogin', function(name) {
 		//alert(name);
 		bougah = name;
-	});	
+	});
+	
     
     var greenIcon = L.icon({
-		iconUrl: 'http://s27.postimg.org/x7qvvujqn/marker_icon_green.png',
-		shadowUrl: 'http://s29.postimg.org/gax7pomtf/marker_shadow.png',
+		iconUrl: 'https://raw.github.com/AmelieA/M7011E/10.12.2013/public/images/marker-icon_green.png',
+		shadowUrl: 'https://raw.github.com/AmelieA/M7011E/10.12.2013/public/images/marker_shadow.png',
 
 		iconSize:     [25, 41], // size of the icon
 		shadowSize:   [41, 41], // size of the shadow

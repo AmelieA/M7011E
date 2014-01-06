@@ -84,7 +84,7 @@ app.post('/*', function(req, res){
 							, __dirname + "/public/images/" + req.files.image.name
 						));	*/
 
-						res.send(format('<body background="http://s9.postimg.org/50uq3fae7/visa_back.png">' + '<p><strong>Picture uploaded : </strong> %s </p>' + '<p><strong>Size : </strong> %d Kb </p>' + '</body>'
+						res.send(format('<body background="https://raw.github.com/AmelieA/M7011E/10.12.2013/public/images/visa_back.png">' + '<p><strong>Picture uploaded : </strong> %s </p>' + '<p><strong>Size : </strong> %d Kb </p>' + '</body>'
 							, req.files.image.name
 							, req.files.image.size / 1024 | 0 
 						));
