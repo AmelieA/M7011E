@@ -44,21 +44,20 @@ app.post('/*', function(req, res){
 				var index_dot=0;
 				
 				console.log("File to upload : " + req.files.image.name);
-				console.log(req.files.image.name.charAt(0));
-				console.log(req.files.image.name.length);
+				//console.log(req.files.image.name.length);
 				
 				while ( (index_dot!=req.files.image.name.length-1) &&  (req.files.image.name.charAt(index_dot)!=".") ) {
-					console.log(index_dot +"..."+ req.files.image.name.charAt(index_dot));
+					//console.log(index_dot +"..."+ req.files.image.name.charAt(index_dot));
 					index_dot++;
 				}	
 				
 				//Determining the file extension
-				console.log("Dot is at index = " + index_dot);	
+				//console.log("Dot is at index = " + index_dot);	
 				var img_format = req.files.image.name.substring(index_dot+1,req.files.image.name.length);
 				console.log("File extension : " + img_format);
 				
 				//Getting the name of the user
-				console.log("NAAAAAAAAAAAAAAAAME : " + querystring.parse(url.parse(req.url).query)['name']);
+				//console.log("NAME : " + querystring.parse(url.parse(req.url).query)['name']);
 				
 				
 				if ( (img_format=="jpg") || (img_format=="png") || (img_format=="gif") || (img_format=="bmp") || (img_format=="tif") || (img_format=="JPG") || (img_format=="PNG") || (img_format=="GIF") || (img_format=="BMP") || (img_format=="TIF")) {
@@ -77,7 +76,7 @@ app.post('/*', function(req, res){
 					}
 								
 					if (imgname_taken==0) {
-						console.log("Location " + req.body.location + " exists."); 
+						//console.log("Location " + req.body.location + " exists."); 
 					/*	res.send(format('<p><strong>Picture uploaded : </strong> %s </p>' + '<p><strong>Size : </strong> %d Kb </p>' + '<p><strong>File location : </strong> %s </p>'
 							, req.files.image.name
 							, req.files.image.size / 1024 | 0 

@@ -20,8 +20,8 @@
 		for (var i = 0; i < result.rows.length; i++) {
 			node.innerHTML += "<input type=\"checkbox\" name=\"googleID\" value=\""+result.rows[i].googleid+"\">"+result.rows[i].firstname+" "+result.rows[i].lastname+" "+result.rows[i].googleid+" "+result.rows[i].banned + "<br>";
 		}
-		node.innerHTML += "<br><button type=\"button\" onclick=\"sendBanned(this.form);\">banned them</button>"
-		node.innerHTML += "<br><button type=\"button\" onclick=\"sendUnBanned(this.form);\">unbanned them</button>"
+		node.innerHTML += "<br><button type=\"button\" onclick=\"sendBanned(this.form);\">ban user(s)</button>"
+		node.innerHTML += "<br><button type=\"button\" onclick=\"sendUnBanned(this.form);\">unban user(s)</button>"
 	});
 	
 	function sendBanned(form){

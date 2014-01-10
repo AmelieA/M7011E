@@ -55,13 +55,12 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', notLoggedIn);
-//app.get('/mapbox/*', routes.connected);
 app.get('/mapbox/*', userAllowed);
 app.get('/mapbox*', notLoggedIn);
 app.get('/users', user.list);
 
 app.use(function(req, res, next){
-  res.send(404, 'Sorry can\'t find that!');
+  res.send(404, 'Sorry, this page couldn\'t be found !');
 });
 
 function notLoggedIn(req,res){
@@ -93,7 +92,7 @@ function userAllowed(req,res){
 
 io.sockets.on('connection', function (socket) {
 	
-	console.log('CLIENT CONNECTED !!!!!!!!!');
+	console.log('CLIENT CONNECTED !');
 	
 	if (loggedIn==0) {
 		socket.emit('notLoggedIn');
@@ -148,6 +147,7 @@ io.sockets.on('connection', function (socket) {
 	
 });	
 
+/* -------------------End of Socket part ------------------------*/
 
 /* -------------------Google Authentication ------------------------*/
 passport.serializeUser(function(user, done) {
